@@ -1,0 +1,38 @@
+#!/bin/sh
+# resolvconf support by Mattias Guns, May 2006.
+
+# Modified by chase 20090414, the dns work on resolv.conf
+#if [ -n "$new_domain_name" -o -n "$new_domain_name_servers" ]; then
+#    new_resolv_conf=/var/etc/resolv_ipv6.conf
+#    rm -f $new_resolv_conf
+#    if [ -n "$new_domain_name" ]; then
+#        echo search $new_domain_name >> $new_resolv_conf
+#    fi
+#    if [ -n "$new_domain_name_servers" ]; then
+#        for nameserver in $new_domain_name_servers; do
+#            echo nameserver $nameserver >> $new_resolv_conf
+#        done
+#    fi
+#fi
+
+#exit 0
+
+RESOLV_IPV4="/var/etc/resolv.conf"
+RESOLV_IPV6="/var/etc/resolv_ipv6.conf"
+RESOLV_CONF="/etc/resolv.conf"
+
+if [ -n "$new_domain_name" -o -n "$new_domain_name_servers" ]; then
+	rm -f $RESOLV_IPV6
+	if [ -n "$new_domain_name" ]; then
+		echo search $new_domain_name >> $RESOLV_IPV6
+	fi
+	if [ -n "$new_domain_name_servers" ]; then
+		for nameserver in $new_domain_name_servers; do
+			echo nameserver $nameserver >> $RESOLV_IPV6
+		done
+		cat $RESOLV_IPV4 $RESOLV_IPV6 > $RESOLV_CONF
+	fi
+fi
+
+exit 0
+

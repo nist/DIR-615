@@ -1,0 +1,16 @@
+2008-07-24 - Snort 2.8.2.2
+[*] Improvements
+    * Fix issue with evaluating PCRE rule options with /U modifier that
+      are followed by a relative content rule option.
+
+    * Fix issue with dsize range check.
+
+2008-06-12 - Snort 2.8.2.1
+[*] Improvements
+    * Fix support for pass rules that sometimes did not take precedence
+      over alert and/or drop rules.
+
+2008-05-28 - Snort 2.8.2
+[*] New Additions
+    * Performance improvements in fast pattern matcher CPU caching and rules
+      processing for common rule options. 

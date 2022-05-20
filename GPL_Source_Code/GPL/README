@@ -1,0 +1,24 @@
+1. Build Environment: 
+	1.1 Download Fedora Core 1, Core 3 or Core 4 from http://fedoraproject.org/, then fully install.
+    1.2 If your OS is fedora core 4, make sure you have installed the package "compat-libstdc+-33-3.2.3-47.fc4.i386.rpm".
+        Using command "rpm -qa | grep compat-libstdc+" to check.
+    1.3 you can open Terminal for using command line.
+    
+2. Using cammand "rpm -qa | grep tftp" to check tftp-server rpm does install in build environment,
+   if not, please create /tftpboot directory using command "mkdir /tftpboot".
+ 
+3. Prepare for toolchain:
+	Copy toolchain/DIR-615_C1-toolchain.tgz to /opt 
+	and using command "tar -jxvf DIR-615_C1-toolchain.tgz" untar it.
+	   
+2. Put DIR-615_C1-GPL.tgz under /home 
+	and using command "tar -jxvf DIR-615_C1-GPL.tgz" untar it.
+      
+5. In /home/AthSDK using command "chmod 777 -R ./" to change file access permission.
+
+7. Then type "make 2>&1 | tee MakeGPLLog.log "
+
+8. After building finished, 
+	you can find DIR-615_C1_ap81_image.bin in /home/AthSDK/image, 
+	    
+9. You can upgrade device with "DIR-615_C1_ap81_image.bin".

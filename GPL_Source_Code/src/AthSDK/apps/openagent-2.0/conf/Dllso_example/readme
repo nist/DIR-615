@@ -1,0 +1,101 @@
+trf <obj:InternetGatewayDevice>
+				device.c <param:LANDeviceNumberOfEntries>
+						 <param:WANDeviceNumberOfEntries> 
+						|
+						|-- <obj:DeviceInfo>
+						|			dev_info.c					
+						|
+						|
+						|-- <obj:DeviceConfig>
+						|			dev_conf.c
+						|	
+						|
+						|-- <obj:ManagementServer>
+						|			manag_server.c
+						|
+						|
+						|-- <obj:Time>
+						|			dev_time.c
+						|	
+						|
+						|-- <obj:UserInterface>
+						|			user_if.c
+						|
+						|
+						|-- <obj:Layer3Forwarding>
+						|			layer3_fwd.c
+						|
+						|
+						|-- <obj:LANConfigSecurity>
+						|			lan_conf_secut.c
+						|
+						|
+						|-- <obj:IPPingDiagnostics>
+						|			ip_ping_diag.c
+						|
+						|
+						|-- <obj:LANDevice>
+						|			lan_dev.c
+						|
+						|
+						|-- <obj:WANDevice>
+									wan_dev.c
+lib </lib/libdev.so>
+
+wandev <dev_get_wan_para>
+				dev_param.c
+
+install <dev_first_install>
+				dev_param.c
+
+manu <dev_Manufacturer>
+				dev_info.c
+
+oui <dev_ManufacturerOUI>
+				dev_info.c
+
+class <dev_ProductClass>
+				dev_info.c
+
+serial <dev_SerialNumber>
+				dev_info.c
+
+paramkey <dev_ManageServer_ParameterKey>
+				manag_server.c
+
+upfig <dev_getconfigfile>
+				dev_upload.c
+
+uplog <dev_getstslog>
+				dev_upload.c
+
+downsys <get_flash_free_size>
+				dev_param.c
+
+downkil <kill_all_apps>
+				dev_param.c
+
+downpar <parse_data>
+				dev_param.c
+
+taskwst <write_config_file>
+				dev_param.c
+
+taskweb <write_web>
+				dev_param.c
+
+taskfla <flash_image>
+				dev_param.c
+
+taskreb <reboot_dev>
+				dev_param.c
+
+trcmd <TR_sys_cmd>
+				dev_param.c
+
+ca_cert </var/etc/ca.pem>
+
+cl_cert <>
+
+cl_key <>
+

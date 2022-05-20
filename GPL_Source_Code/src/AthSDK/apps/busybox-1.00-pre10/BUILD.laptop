@@ -1,0 +1,7 @@
+#cd busybox-1.00-pre10
+#make menuconfig	/* if needed */
+
+make CROSS= LDFLAGS="-lm -lpthread" clean
+make CROSS= LDFLAGS="-lm -lpthread" depend
+make CROSS= LDFLAGS="-lm -lpthread"
+

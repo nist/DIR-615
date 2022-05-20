@@ -1,0 +1,1447 @@
+DLINK-DWL3250-MIB DEFINITIONS ::= BEGIN
+  
+IMPORTS
+	enterprises, IpAddress, TimeTicks		   
+		FROM RFC1155-SMI
+	MODULE-IDENTITY, NOTIFICATION-TYPE,OBJECT-TYPE, Counter32, Integer32		   
+		FROM SNMPv2-SMI
+	DisplayString, MacAddress, RowStatus,TruthValue, TEXTUAL-CONVENTION  
+		FROM SNMPv2-TC              
+	MODULE-COMPLIANCE, OBJECT-GROUP, 
+	NOTIFICATION-GROUP 						   FROM SNMPv2-CONF
+;
+
+  dlink	OBJECT IDENTIFIER ::= { enterprises 171 } 
+   
+-- **********************************************************************
+-- *  MODULE IDENTITY
+-- **********************************************************************
+    dlkEnterpriseDWL3250 MODULE-IDENTITY
+    	LAST-UPDATED "200306050000Z"
+    	ORGANIZATION "D-Link, Inc."
+    	CONTACT-INFO 
+           "Postal: D-Link, Inc.
+                    2F, No.233-2, Pao-Chiao Road,
+                    Hsin-Tien, Taipei, 
+                    Taiwan, R.O.C.
+               Tel: +886-2-29161600 
+               Fax: +886-2-29146299"            
+               
+    	DESCRIPTION
+        	"The MIB module for D-Link DWL-3250 product.
+         	This module derived from IEEE ieee802dot11"
+    ::= { dlink 1 }
+      
+-- dlkEnterpriseDWL3250 OBJECT IDs Groups
+    dlkEnterpriseCommonInfo OBJECT IDENTIFIER ::= {	dlkEnterpriseDWL3250 1 }
+	dlkEnterpriseWireless	OBJECT IDENTIFIER ::= {	dlkEnterpriseDWL3250 2 }
+	dlkEnterpriseWAN		OBJECT IDENTIFIER ::= {	dlkEnterpriseDWL3250 3 }
+	dlkEnterpriseLAN		OBJECT IDENTIFIER ::= {	dlkEnterpriseDWL3250 4 }
+    dlkEnterpriseAdvanced	OBJECT IDENTIFIER ::= {	dlkEnterpriseDWL3250 5 }
+            
+-- **********************************************************************
+-- *  dlkEnterpriseCommonInfo sections
+-- **********************************************************************
+	enterpriseModelName OBJECT-TYPE
+        SYNTAX	DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+        	"DLINK product's name."
+    ::= { dlkEnterpriseCommonInfo 1 }
+                                     
+	enterpriseSystemTime OBJECT-TYPE
+        SYNTAX	   TimeTicks
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+        	"Device system time."
+    ::= { dlkEnterpriseCommonInfo 2 }
+
+	enterpriseUpTime OBJECT-TYPE
+        SYNTAX	   TimeTicks
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+        	"DLINK system up name."
+    ::= { dlkEnterpriseCommonInfo 3 }
+
+	enterpriseFirmwareVersion OBJECT-TYPE
+        SYNTAX	DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+        	"DLINK product's firmware version."
+    ::= { dlkEnterpriseCommonInfo 4 } 
+    
+    enterpriseHWID OBJECT-TYPE
+        SYNTAX	DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+        	"DLINK product's HWID."
+    ::= { dlkEnterpriseCommonInfo 5 }   
+    
+    enterpriseSystemReboot OBJECT-TYPE
+        SYNTAX	INTEGER{default(0),reboot(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"reboot device function.reboot(1)."
+    ::= { dlkEnterpriseCommonInfo 6 }
+    
+    enterpriseLimitAdmin OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'limit administrator IP' function."
+    ::= { dlkEnterpriseCommonInfo 7 }
+                                      
+	enterpriseLimitAdminIP1 OBJECT-TYPE
+        SYNTAX	IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"set up the limit administrator IP address.  
+        	 NOTICE:: You 'must' enable enterpriseLimitAdmin,first."
+    ::= { dlkEnterpriseCommonInfo 8 }
+    
+    enterpriseLimitAdminIP2 OBJECT-TYPE
+        SYNTAX	IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"set up the limit administrator IP address.  
+        	 NOTICE:: You 'must' enable enterpriseLimitAdmin,first."
+    ::= { dlkEnterpriseCommonInfo 9 }
+    
+    enterpriseConsoleSettings OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable console function"
+    ::= { dlkEnterpriseCommonInfo 10 }
+    
+    enterpriseConsoleSettingsTimeout OBJECT-TYPE
+        SYNTAX	INTEGER{never(0),
+        				onemin(1),
+        				threemins(2),
+        				fivemins(3),
+        				tenmins(4),
+        				fiftenmins(5)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Set using time of console. defaule value is 0 (never).
+        	NOTICE:if you want this object(using time) to work, you 
+        	'need' to enable enterpriseConsoleSettings,first.
+        	0: never
+        	1: 1  min
+        	2: 3  mins
+        	3: 5  mins
+        	4: 10 mins
+        	5: 15 mins"
+    ::= { dlkEnterpriseCommonInfo 11 }  
+    
+    enterpriseSystemRestore OBJECT-TYPE
+        SYNTAX	INTEGER{default(0),restore(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Restore default function."
+    ::= { dlkEnterpriseCommonInfo 12 }
+                                        
+	dlkEnterpriseNTP	OBJECT IDENTIFIER ::= {	dlkEnterpriseCommonInfo 13 }
+	
+	enterpriseNTPServerIP OBJECT-TYPE
+        SYNTAX	IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"NTP server IP."
+    ::= { dlkEnterpriseNTP 1 }
+     
+    enterpriseNTPTimeZone OBJECT-TYPE
+        SYNTAX	INTEGER
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"NTP time zone.
+        	0:(GMT-12:00)Eniwetok, Kwajalein
+        	1:(GMT-11:00) Midway Island, Samoa
+        	2:(GMT-10:00) Hawaii
+        	3:(GMT-09:00) Alaska
+        	4:(GMT-08:00) Pacific Time (US &amp; Canada)
+        	5:(GMT-07:00) Arizona
+        	6:(GMT-07:00) Mountain Time (US &amp; Canada)
+        	7:(GMT-06:00) Central Time (US &amp; Canada)
+        	8:(GMT-06:00) Mexico City, Tegucigalpa
+        	9:(GMT-05:00) Bogota, Lima, Quito
+           10:(GMT-05:00) Eastern Time (US &amp; Canada)
+           11:(GMT-05:00) Indiana (East)
+           12:(GMT-04:00) Atlantic Time (US &amp; Canada)
+           13:(GMT-04:00) Caracas, La Paz
+           14:(GMT-03:30) Newfoundland
+           15:(GMT-03:00) Brasilia
+           16:(GMT-03:00) Buenos Aires, Georgetown
+           17:(GMT-02:00) Mid-Atlantic
+           18:(GMT-01:00) Azores, Cape Verde Is
+           19:(GMT) Casablanca, Monrovia
+           20:(GMT) Dublin, Edinburgh, Lisbon, London
+           21:(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+           22:(GMT+01:00) Belgrade, Bratislave, Budapest, Ljubljana, Prague
+           23:(GMT+01:00) Brussels, Copenhagen, Madrid, Paris, Vilnius
+           24:(GMT+01:00) Sarajevo, Skopje, Sofija, Warsaw, Zagreb
+           25:(GMT+02:00) Athens, Bucharest, Cairo, Istanbul, Mins
+           26:(GMT+02:00) Harare, Helsinki, Jerusalem, Pretoria, Riga, Tallinn
+           27:(GMT+03:00) Baghdad, Kuwait, Riyadh
+           28:(GMT+03:00) Moscow, St.Petersburg, Volgograd
+           29:(GMT+03:30) Tehran
+           30:(GMT+04:00) Abu Dhabi, Baku, Muscat, Tbilist
+           31:(GMT+04:30) Kabul
+           32:(GMT+05:00) EKaterinburg, Islamabad, Karachi, Tashikent
+           33:(GMT+05:30) New Delhi
+           34:(GMT+06:00) Astana, Almaty, Colombo, Dhaka
+           35:(GMT+07:00) Bangkok, Hanoi, Jakarta
+           36:(GMT+08:00) Beijing, Hong Kong, Singapore, Taipei
+           37:(GMT+09:00) Seoul, Tokyo, Yakutsk
+           38:(GMT+09:30) Adelaide, Darwin
+           39:(GMT+10:00) Canberra, Guam, Port Moresby, Vladivostok
+           40:(GMT+11:00) Magadan, Solomon Islands
+           42:(GMT+12:00) Fiji, Kamchatka, Marshall Islands, Willington           
+        	"
+    ::= { dlkEnterpriseNTP 2 }
+    
+	EnterpriseNTPDaylightSaving OBJECT-TYPE
+        SYNTAX  INTEGER {Disable(0),Enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Enable od disable daylight saving for NTP.
+                "
+    ::= { dlkEnterpriseNTP 3 }
+    
+    dlkEnterpriseNTPStartDate	OBJECT IDENTIFIER ::= {	dlkEnterpriseNTP 4 }
+    dlkEnterpriseNTPEndDate	OBJECT IDENTIFIER ::= {	dlkEnterpriseNTP 5 }
+    
+    enterpriseStartMonth OBJECT-TYPE
+        SYNTAX  INTEGER (1..12)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: Jan
+                2: Feb
+                3: Mar
+                4: Apr
+                5: May
+                6: Jun
+                7: Jul
+                8: Aug
+                9: Sep
+               10: Oct
+               11: Nov
+               12: Dec"
+    ::= { dlkEnterpriseNTPStartDate 1 }
+    
+    enterpriseStartWeek OBJECT-TYPE
+        SYNTAX  INTEGER (1..5)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: First week
+                2: Second week
+                3: Third week
+                4: Fourth week
+                5: fifth week"
+    ::= { dlkEnterpriseNTPStartDate 2 } 
+    
+    enterpriseStartDayOfWeek OBJECT-TYPE
+        SYNTAX  INTEGER (1..7)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: Sun
+                2: Mon
+                3: Tue
+                4: Wen
+                5: Thu
+                6: Fri
+                7: Sat"
+    ::= { dlkEnterpriseNTPStartDate 3 }
+    
+    enterpriseStartTime OBJECT-TYPE
+        SYNTAX  INTEGER (1..24)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: 12 am     13: 12 pm
+                2:  1 am     14: 11 pm
+                3:  2 am     15: 10 pm
+                4:  3 am     16:  9 pm
+                5:  4 am     17:  8 pm
+                6:  5 am     18:  7 pm
+                7:  6 am     19:  6 pm
+                8:  7 am     20:  5 pm
+                9:  8 am     21:  4 pm
+               10:  9 am     22:  3 pm
+               11: 10 am     23:  2 pm
+               12: 11 am     24:  1 pm   "
+    ::= { dlkEnterpriseNTPStartDate 4 }
+
+	enterpriseEndMonth OBJECT-TYPE
+        SYNTAX  INTEGER (1..12)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: Jan
+                2: Feb
+                3: Mar
+                4: Apr
+                5: May
+                6: Jun
+                7: Jul
+                8: Aug
+                9: Sep
+               10: Oct
+               11: Nov
+               12: Dec"
+    ::= { dlkEnterpriseNTPEndDate 1 }
+    
+    enterpriseEndWeek OBJECT-TYPE
+        SYNTAX  INTEGER (1..5)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: First week
+                2: Second week
+                3: Third week
+                4: Fourth week
+                5: fifth week"
+    ::= { dlkEnterpriseNTPEndDate 2 } 
+    
+    enterpriseEndDayOfWeek OBJECT-TYPE
+        SYNTAX  INTEGER (1..7)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: Sun
+                2: Mon
+                3: Tue
+                4: Wen
+                5: Thu
+                6: Fri
+                7: Sat"
+    ::= { dlkEnterpriseNTPEndDate 3 }
+    
+    enterpriseEndTime OBJECT-TYPE
+        SYNTAX  INTEGER (1..24)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when EnterpriseNTPDaylightSaving = Enable(1).
+                1: 12 am     13: 12 pm
+                2:  1 am     14: 11 pm
+                3:  2 am     15: 10 pm
+                4:  3 am     16:  9 pm
+                5:  4 am     17:  8 pm
+                6:  5 am     18:  7 pm
+                7:  6 am     19:  6 pm
+                8:  7 am     20:  5 pm
+                9:  8 am     21:  4 pm
+               10:  9 am     22:  3 pm
+               11: 10 am     23:  2 pm
+               12: 11 am     24:  1 pm   "
+    ::= { dlkEnterpriseNTPEndDate 4 }
+                                        
+-- **********************************************************************
+-- *  dlkEnterpriseWireless sections
+-- **********************************************************************
+    dlkEnterpriseWirelessInfo	OBJECT IDENTIFIER ::= { dlkEnterpriseWireless 1 }
+    dlkEnterpriseWirelessSecurity	OBJECT IDENTIFIER ::= { dlkEnterpriseWireless 2 } 
+
+-- **********************************************************************
+-- *  dlkEnterpriseWirelessInfo sections
+-- **********************************************************************
+	enterpriseSSID OBJECT-TYPE
+        SYNTAX	OCTET STRING (SIZE(1..32))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Wireless SSID."
+    ::= { dlkEnterpriseWirelessInfo 1 }
+    
+        enterpriseChannel OBJECT-TYPE
+        SYNTAX  INTEGER (1..13)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless Channel.Range: 1 - 13"
+    ::= { dlkEnterpriseWirelessInfo 2 }
+
+        enterpriseDataRate OBJECT-TYPE
+        SYNTAX  INTEGER (0..12)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless data rate.Range: 0 - 12
+        	value:  information(data rate mode)
+        		0:	auto
+        		1:	1		Mbps
+        		2:	2		Mbps
+        		3:	5.5		Mbps
+        		4:	6		Mbps
+        		5:	9		Mbps
+        		6:	11		Mbps
+        		7:	12		Mbps
+        		8:	18		Mbps
+        		9:	24		Mbps
+        		10:	36		Mbps
+        		11:	48		Mbps
+        		12:	54		Mbps       "
+    ::= { dlkEnterpriseWirelessInfo 3 } 
+    
+    enterpriseFragmentLength OBJECT-TYPE
+        SYNTAX  INTEGER (256..2346)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless fragment length.Range: 256 - 2346"
+    ::= { dlkEnterpriseWirelessInfo 4 }
+                                       
+	enterpriseRTSLength OBJECT-TYPE
+        SYNTAX  INTEGER (1..2346)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless RTS length.Range: 1 - 2346"
+    ::= { dlkEnterpriseWirelessInfo 5 } 
+    
+    enterpriseTransmitPower OBJECT-TYPE
+        SYNTAX  INTEGER (1..5)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless power level of transmission.Level: 1 - 5.
+                level 1: full
+                level 2: half(-3dB) 
+                level 3: quarter(-6dB)
+                level 4: eighth(-9dB)
+                level 5: min"
+    ::= { dlkEnterpriseWirelessInfo 6 }
+    
+    enterpriseBGMode OBJECT-TYPE
+        SYNTAX  INTEGER {mixed(0),bonly(1),gonly(2)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless mode.
+                 0: Mixed(11b and 11g)
+                 1: 11b only
+                 2: 11g only"
+    ::= { dlkEnterpriseWirelessInfo 7 }   
+    
+    enterpriseAntennaDiversity OBJECT-TYPE
+        SYNTAX  INTEGER {diversity(0),leftAntenna(1),rightAntenna(2)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless antenna diversity mode.
+                 0: diversity
+                 1: leftAntenna
+                 2: rightAntenna"
+    ::= { dlkEnterpriseWirelessInfo 8 }
+    
+    enterpriseConnectedTime OBJECT-TYPE
+        SYNTAX TimeTicks 
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Wireless connected time."
+    ::= { dlkEnterpriseWirelessInfo 9 }  
+
+	dlkEnterpriseScanList	OBJECT IDENTIFIER ::= { dlkEnterpriseWirelessInfo 10 }
+	
+	dlkEnterpriseScanListTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF ScanListEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of scan list of wireless client. "			
+	::= { dlkEnterpriseScanList 1 }
+
+		ScanListEntry OBJECT-TYPE
+		SYNTAX  ScanListEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { scanListIndex }
+	::= { dlkEnterpriseScanListTable 1 }
+
+	ScanListEntry ::= SEQUENCE {
+			scanListIndex INTEGER,         
+            scanList OCTET STRING          
+         	}
+
+	scanListIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of scan list. "
+	::= { ScanListEntry 1 }
+
+	scanList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the scan list. "
+	::= { ScanListEntry 2 }
+
+-- **********************************************************************
+-- *  dlkEnterpriseWirelessSecurity sections
+-- **********************************************************************
+       
+    
+    dlkWirelessAuthenticationType OBJECT-TYPE
+        SYNTAX  INTEGER {openSystemNoneEncryption(0),
+        				 openSystemHasEncryption(1),
+        				 sharedKey(2),
+        				 autoSharedKeyOrOpenSystem(3),
+        				 wpaEnterprise(4),
+        				 wpaPersonal(5),
+        				 wpa2Enterprise(6),
+        				 wpa2Personal(7),
+        				 wpaAutoEnterprise(8),
+        				 wpaAutoPersonal(9)
+        				 }
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Wireless authentication type.
+                 0: openSystem with no encryption(no security)
+                 1: openSystem with encryption(WEP)
+                 2: sharedKey(WEP)
+                 3: auto select sharedKey or openSystem
+                 4: wpa-Enterprise
+                 5: wpa-Personal
+                 6: wpa2-Enterprise
+                 7: wpa2-Personal
+                 8: wpa-auto-Enterprise
+                 9: wpa-auto-Personal"
+    ::= { dlkEnterpriseWirelessSecurity 1 }
+    
+    dlkWirelessWEPKeyType OBJECT-TYPE
+        SYNTAX  INTEGER {HEX(0),ASCII(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the type of WEP encryption  used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                0:HEX type
+                1:ASCII type"
+    ::= { dlkEnterpriseWirelessSecurity 2 }
+    
+    dlkWirelessWEPKeySize OBJECT-TYPE
+        SYNTAX  INTEGER (0..2)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the key size of WEP encryption used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                0: 64 Bits
+                1: 128 Bits
+                2: 152 Bits"
+    ::= { dlkEnterpriseWirelessSecurity 3 }
+    
+    dlkWirelessWEPValidKey OBJECT-TYPE
+        SYNTAX  INTEGER {first(1),second(2),third(3),fourth(4)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the valid key of WEP encryption used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                1: first key
+                2: second key
+                3: third key
+                4: fourth key"
+    ::= { dlkEnterpriseWirelessSecurity 4 }
+    
+    dlkWirelessWPAPassPhrase OBJECT-TYPE
+        SYNTAX  OCTET STRING (SIZE(8..64))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the PassPhrase of WAP/WPA2/WPA-auto personal used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 5/7/9.
+                "
+    ::= { dlkEnterpriseWirelessSecurity 5 }
+    
+    dlkWirelessWEPKey OBJECT IDENTIFIER ::= { dlkEnterpriseWirelessSecurity 6 }
+    
+    dlkWirelessWEPKeyOne OBJECT-TYPE
+        SYNTAX DisplayString 
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the key of WEP encryption used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                The legal characters of HEX are 0~9, A~F, or a~f
+                The legal characters of ASCII are not limited
+
+                		
+                		  HEX(characters)  ASCII (characters)
+                64 Bits           10			5
+                128 Bits          26			13
+                152 Bits          32			16
+                
+                "
+    ::= { dlkWirelessWEPKey 1 }
+    
+    dlkWirelessWEPKeyTwo OBJECT-TYPE
+        SYNTAX DisplayString 
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the key of WEP encryption used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                The legal characters of HEX are 0~9, A~F, or a~f
+                The legal characters of ASCII are not limited
+
+                		
+                		  HEX(characters)  ASCII (characters)
+                64 Bits           10			5
+                128 Bits          26			13
+                152 Bits          32			16
+                
+                "
+    ::= { dlkWirelessWEPKey 2 } 
+    
+    dlkWirelessWEPKeyThree OBJECT-TYPE
+        SYNTAX DisplayString 
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the key of WEP encryption used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                The legal characters of HEX are 0~9, A~F, or a~f
+                The legal characters of ASCII are not limited
+
+                		
+                		  HEX(characters)  ASCII (characters)
+                64 Bits           10			5
+                128 Bits          26			13
+                152 Bits          32			16
+                
+                "
+    ::= { dlkWirelessWEPKey 3 }
+
+dlkWirelessWEPKeyFour OBJECT-TYPE
+        SYNTAX DisplayString 
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the key of WEP encryption used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 1/2/3.
+                The legal characters of HEX are 0~9, A~F, or a~f
+                The legal characters of ASCII are not limited
+
+                		
+                		  HEX(characters)  ASCII (characters)
+                64 Bits           10			5
+                128 Bits          26			13
+                152 Bits          32			16
+                
+                "
+    ::= { dlkWirelessWEPKey 4 }
+
+
+dlkWirelessEnterprise OBJECT IDENTIFIER ::= { dlkEnterpriseWirelessSecurity 7 }
+
+	dlkWirelessEAPType OBJECT-TYPE
+        SYNTAX  INTEGER {TLS(0),TTLS(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the EAP type for WPA/WPA2/WPA-auto enterprise used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 4/6/8.
+                0:TLS 
+                1:TTLS"
+    ::= { dlkWirelessEnterprise 1 } 
+    
+    dlkWirelessAuthType OBJECT-TYPE
+        SYNTAX  INTEGER {PAP(0),CHAP(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the authentication type for WPA/WPA2/WPA-auto enterprise used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 4/6/8.
+                0:PAP 
+                1:CHAP"
+    ::= { dlkWirelessEnterprise 2 }
+		
+    dlkWirelessCertificate OBJECT-TYPE
+        SYNTAX  DisplayString
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This attribute shall indicate the PATH of Certificate for WPA/WPA2/WPA-auto enterprise used.
+                NOTICE: you can modify it when dlkWirelessAuthenticationType = 4/6/8.
+                EX:
+                C:\Documents and Settings\Administrator\My Documents\Certificate.xxx"
+    ::= { dlkWirelessEnterprise 3 }
+             
+-- **********************************************************************
+-- *  dlkEnterpriseWAN sections
+-- **********************************************************************
+	dlkEnterpriseWANMode OBJECT-TYPE
+        SYNTAX  INTEGER {DHCPClient(0),StaticIP(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "WAN connected mode
+                0:DHCP client 
+                1:Static IP"
+    ::= { dlkEnterpriseWAN 1 }  
+    
+    dlkEnterpriseWANHostName OBJECT-TYPE
+        SYNTAX  OCTET STRING (SIZE(8..64))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "WAN host name."
+    ::= { dlkEnterpriseWAN 2 }
+                               
+	dlkEnterpriseWANMacAddress OBJECT-TYPE
+        SYNTAX  MacAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "WAN MAC address."
+    ::= { dlkEnterpriseWAN 3 } 
+    
+    dlkEnterpriseWANCloneMac OBJECT-TYPE
+        SYNTAX  INTEGER {Disable(0),Enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "If you enable this function, router will copy PC's MAC to it's WAN port."
+    ::= { dlkEnterpriseWAN 4 }                              
+                            
+	dlkEnterpriseWANPrimaryDNS OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up primary DNS for WAN."
+    ::= { dlkEnterpriseWAN 5 }
+    
+    dlkEnterpriseWANSecondaryDNS OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up secondary DNS for WAN."
+    ::= { dlkEnterpriseWAN 6 }
+    
+    dlkEnterpriseWANMTU OBJECT-TYPE
+        SYNTAX  INTEGER (1400..1500)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up MTU for WAN."
+    ::= { dlkEnterpriseWAN 7 }
+    
+    dlkEnterpriseWANIPAddress OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up IP address for WAN when dlkEnterpriseWANMode = StaticIP(1) ."
+    ::= { dlkEnterpriseWAN 8 }
+    
+    dlkEnterpriseWANSubnetMask OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up subnet mask for WAN when dlkEnterpriseWANMode = StaticIP(1) ."
+    ::= { dlkEnterpriseWAN 9 }
+    
+    dlkEnterpriseWANISPGateway OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up ISP gateway for WAN when dlkEnterpriseWANMode = StaticIP(1) ."
+    ::= { dlkEnterpriseWAN 10 }  
+    
+    dlkEnterpriseWANPacketsStatus 	OBJECT IDENTIFIER ::= {dlkEnterpriseWAN 11 }
+    dlkWANTransmittedFrame			OBJECT IDENTIFIER ::= {dlkEnterpriseWANPacketsStatus 1 }
+    dlkWANReceivedFrame				OBJECT IDENTIFIER ::= {dlkEnterpriseWANPacketsStatus 2 }
+    
+    dlkWANTxFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the transmitted count of frame for WAN."
+    ::= { dlkWANTransmittedFrame 1 }
+    
+    dlkWANTxMulticastFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the multicast transmitted count of frame for WAN."
+    ::= { dlkWANTransmittedFrame 2 }
+    
+    dlkWANTxErrorFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the transmitted count of error frame for WAN."
+    ::= { dlkWANTransmittedFrame 3 }
+    
+    dlkWANRxFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the received count of frame for WAN."
+    ::= { dlkWANReceivedFrame 1 }
+    
+    dlkWANRxMulticastFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the multicast received count of frame for WAN."
+    ::= { dlkWANReceivedFrame 2 }
+    
+    dlkWANRxErrorFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the received count of error frame for WAN."
+    ::= { dlkWANReceivedFrame 3 }
+
+-- **********************************************************************
+-- *  dlkEnterpriseAdvanced sections
+-- **********************************************************************
+	dlkAdvancedNetwork 	OBJECT IDENTIFIER ::= { dlkEnterpriseAdvanced 1 }
+	dlkAdvancedDDNS 	OBJECT IDENTIFIER ::= { dlkEnterpriseAdvanced 2 }
+	dlkAdvancedFirewallSetting 	OBJECT IDENTIFIER ::= { dlkEnterpriseAdvanced 3 }
+	dlkAdvancedScheduleRule OBJECT IDENTIFIER ::= {dlkEnterpriseAdvanced 4}
+	dlkAdvancedApplicationRule OBJECT IDENTIFIER ::= {dlkEnterpriseAdvanced 5}
+    dlkAdvancedMacFilter OBJECT IDENTIFIER ::= {dlkEnterpriseAdvanced 6}
+    dlkAdvancedWebFilter OBJECT IDENTIFIER ::= {dlkEnterpriseAdvanced 7}           
+    dlkAdvancedPortForwarding OBJECT IDENTIFIER ::= {dlkEnterpriseAdvanced 8}           
+    dlkAdvancedVirtualServer OBJECT IDENTIFIER ::= {dlkEnterpriseAdvanced 9}    
+		
+		
+		webFilterType OBJECT-TYPE
+        SYNTAX  INTEGER (0..2)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Select the type of web filter.
+                0: Turn Website Filtering OFF
+                1: Turn Website Filtering ON and ALLOW computers access to ONLY these sites
+                2: Turn Website Filtering ON and DENY computers access to ONLY these sites"
+    ::= { dlkAdvancedWebFilter 1 }
+        
+        webFilterTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF WebFilterEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of web filter. "			
+	::= { dlkAdvancedWebFilter 2 }
+
+		WebFilterEntry OBJECT-TYPE
+		SYNTAX  WebFilterEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { webFilterIndex }
+	::= { webFilterTable 1 }
+
+	WebFilterEntry ::= SEQUENCE {
+			webFilterIndex INTEGER,         
+            webFilterList OCTET STRING          
+         	}
+
+	webFilterIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of web filter. "
+	::= { WebFilterEntry 1 }
+
+	webFilterList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the list of web filter. "
+	::= { WebFilterEntry 2 }
+
+		
+		
+		
+		virtualServerTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF VirtualServerEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of virtual server. "			
+	::= { dlkAdvancedVirtualServer 1 }
+
+		VirtualServerEntry OBJECT-TYPE
+		SYNTAX  VirtualServerEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { virtualServerIndex }
+	::= { virtualServerTable 1 }
+
+	VirtualServerEntry ::= SEQUENCE {
+			virtualServerIndex INTEGER,         
+            virtualServerList OCTET STRING          
+         	}
+
+	virtualServerIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of virtual server. "
+	::= { VirtualServerEntry 1 }
+
+	virtualServerList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the list of virtual server. "
+	::= { VirtualServerEntry 2 }
+
+		
+		
+		
+		portForwardingTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF PortForwardingEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of port forwarding. "			
+	::= { dlkAdvancedPortForwarding 1 }
+
+		PortForwardingEntry OBJECT-TYPE
+		SYNTAX  PortForwardingEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { portForwardingIndex }
+	::= { portForwardingTable 1 }
+
+	PortForwardingEntry ::= SEQUENCE {
+			portForwardingIndex INTEGER,         
+            portForwardingList OCTET STRING          
+         	}
+
+	portForwardingIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of port forwarding. "
+	::= { PortForwardingEntry 1 }
+
+	portForwardingList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the list of port forwarding. "
+	::= { PortForwardingEntry 2 }
+ 
+        
+        
+        
+        
+        macFilterType OBJECT-TYPE
+        SYNTAX  INTEGER (0..2)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Select the type of mac filter.
+                0: Turn MAC Filtering OFF
+                1: Turn MAC Filtering ON and ALLOW computers listed to access the network
+                2: Turn MAC Filtering ON and DENY computers listed to access the network"
+    ::= { dlkAdvancedMacFilter 1 }
+        
+        macFilterTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF MacFilterEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of mac filter. "			
+	::= { dlkAdvancedMacFilter 2 }
+
+		MacFilterEntry OBJECT-TYPE
+		SYNTAX  MacFilterEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { macFilterIndex }
+	::= { macFilterTable 1 }
+
+	MacFilterEntry ::= SEQUENCE {
+			macFilterIndex INTEGER,         
+            macFilterList OCTET STRING          
+         	}
+
+	macFilterIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of mac filter. "
+	::= { MacFilterEntry 1 }
+
+	macFilterList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the list of mac filter. "
+	::= { MacFilterEntry 2 }
+        
+        
+        
+        
+        applicationRuleTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF ApplicationRuleEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of application rule. "			
+	::= { dlkAdvancedApplicationRule 1 }
+
+		ApplicationRuleEntry OBJECT-TYPE
+		SYNTAX  ApplicationRuleEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { applicationRuleIndex }
+	::= { applicationRuleTable 1 }
+
+	ApplicationRuleEntry ::= SEQUENCE {
+			applicationRuleIndex INTEGER,         
+            applicationRule OCTET STRING          
+         	}
+
+	applicationRuleIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of application rule. "
+	::= { ApplicationRuleEntry 1 }
+
+	applicationRule OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the application rule. "
+	::= { ApplicationRuleEntry 2 }        
+		
+		
+		
+		scheduleRuleTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF ScheduleRuleEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of schedule rule. "			
+	::= { dlkAdvancedScheduleRule 1 }
+
+		ScheduleRuleEntry OBJECT-TYPE
+		SYNTAX  ScheduleRuleEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { scheduleRuleIndex }
+	::= { scheduleRuleTable 1 }
+
+	ScheduleRuleEntry ::= SEQUENCE {
+			scheduleRuleIndex INTEGER,         
+            scheduleRule OCTET STRING          
+         	}
+
+	scheduleRuleIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of schedule rule. "
+	::= { ScheduleRuleEntry 1 }
+
+	scheduleRule OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the schedule rule. "
+	::= { ScheduleRuleEntry 2 }         
+	
+	
+	
+	
+	enterpriseUPNP OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'UPNP' function."
+    ::= { dlkAdvancedNetwork 1}
+    
+    enterpriseWANPingRespond OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'WAN Ping respond' function."
+    ::= { dlkAdvancedNetwork 2}
+    
+    enterpriseMulticastStreams OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'Multicast streams' function."
+    ::= { dlkAdvancedNetwork 3}      
+    
+    enterpriseDDNS OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'DDNS' function."
+    ::= { dlkAdvancedDDNS 1}  
+    
+    enterpriseServerAddress OBJECT-TYPE
+        SYNTAX	INTEGER {DynDns(0),EasyDns(1),NoIP(2)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"It can be set up when enterpriseDDNS = enable(1)."
+    ::= { dlkAdvancedDDNS 2}
+	                          
+	enterpriseHostName OBJECT-TYPE
+        SYNTAX	OCTET STRING (SIZE(1..128))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"It can be set up when enterpriseDDNS = enable(1).
+        	max length = 128 characters."
+    ::= { dlkAdvancedDDNS 3}
+    
+    enterpriseUserName OBJECT-TYPE
+        SYNTAX	OCTET STRING (SIZE(1..128))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"It can be set up when enterpriseDDNS = enable(1).
+        	max length = 128 characters."
+    ::= { dlkAdvancedDDNS 4}
+    
+    enterprisePassword OBJECT-TYPE
+        SYNTAX	OCTET STRING (SIZE(1..128))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"It can be set up when enterpriseDDNS = enable(1).
+        	max length = 128 characters."
+    ::= { dlkAdvancedDDNS 5}
+    
+    enterprisePPTPPassThrough OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'PPTP pass through' function."
+    ::= { dlkAdvancedFirewallSetting 1}
+    
+    enterpriseL2TPPassThrough OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'L2TP pass through' function."
+    ::= { dlkAdvancedFirewallSetting 2}
+    
+    enterpriseIPSECPassThrough OBJECT-TYPE
+        SYNTAX	INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+        	"Enable or disable 'IPSEC pass through' function."
+    ::= { dlkAdvancedFirewallSetting 3}
+    
+              
+-- **********************************************************************
+-- *  dlkEnterpriseLAN sections
+-- **********************************************************************
+	dlkEnterpriseLANInfo 	OBJECT IDENTIFIER ::= { dlkEnterpriseLAN 1 }
+	dlkEnterpriseDHCP 		OBJECT IDENTIFIER ::= { dlkEnterpriseLAN 2 } 
+	dlkEnterpriseLANPacketsStatus 	OBJECT IDENTIFIER ::= {dlkEnterpriseLAN 3 }
+    dlkLANTransmittedFrame			OBJECT IDENTIFIER ::= {dlkEnterpriseLANPacketsStatus 1 }
+    dlkLANReceivedFrame				OBJECT IDENTIFIER ::= {dlkEnterpriseLANPacketsStatus 2 }
+
+	dlkEnterpriseLANIPAddress OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up IP address for LAN."
+    ::= { dlkEnterpriseLANInfo 1 }
+    
+    dlkEnterpriseLANSubnetMask OBJECT-TYPE
+        SYNTAX  IpAddress
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up subnet mask for LAN."
+    ::= { dlkEnterpriseLANInfo 2 }
+    
+   	dlkEnterpriseLANDomainName OBJECT-TYPE
+        SYNTAX  OCTET STRING (SIZE(1..64))
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Set up domain name for LAN."
+    ::= { dlkEnterpriseLANInfo 3 }
+    
+    dlkEnterpriseLANDNSRelay OBJECT-TYPE
+        SYNTAX  INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Enable or disable DNS relay for LAN."
+    ::= { dlkEnterpriseLANInfo 4 }     
+-- **********************************************************************
+-- *  dlkEnterpriseDHCP sections
+-- **********************************************************************   
+    
+    dlkEnterpriseDHCPService OBJECT-TYPE
+        SYNTAX  INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "Enable or disable the service of DHCP server for LAN."
+    ::= { dlkEnterpriseDHCP 1 } 
+	
+    dlkEnterpriseDHCPStartIP OBJECT-TYPE
+        SYNTAX  INTEGER (0..254)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when dlkEnterpriseDHCPService = enable(1).
+                Range: 0 to 254."
+    ::= { dlkEnterpriseDHCP 2 }
+    
+    dlkEnterpriseDHCPEndIP OBJECT-TYPE
+        SYNTAX  INTEGER (0..254)
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when dlkEnterpriseDHCPService = enable(1).
+                Range: 0 to 254."
+    ::= { dlkEnterpriseDHCP 3 }
+    
+    dlkEnterpriseDHCPLeaseTime OBJECT-TYPE
+        SYNTAX  INTEGER (1..4294967294) 
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when dlkEnterpriseDHCPService = enable(1).
+                unit: minute"
+    ::= { dlkEnterpriseDHCP 4 }
+    
+    dlkEnterpriseDHCPDomainName OBJECT-TYPE
+        SYNTAX  OCTET STRING (SIZE(1..64)) 
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when dlkEnterpriseDHCPService = enable(1)."
+    ::= { dlkEnterpriseDHCP 5 }
+    
+    dlkEnterpriseDHCPDNSRelay OBJECT-TYPE
+        SYNTAX  INTEGER{disable(0),enable(1)}
+        MAX-ACCESS read-write
+        STATUS current
+        DESCRIPTION
+                "This can be set when dlkEnterpriseDHCPService = enable(1)."
+    ::= { dlkEnterpriseDHCP 6 }
+    
+    dlkEnterpriseReservationList 	OBJECT IDENTIFIER ::= { dlkEnterpriseDHCP 7 }
+    dlkEnterpriseClientList 	OBJECT IDENTIFIER ::= { dlkEnterpriseDHCP 8 }
+    
+    dlkEnterpriseReservationTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF ReservationEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of reservation list of DHCP server. "			
+	::= { dlkEnterpriseReservationList 1 }
+
+		ReservationEntry OBJECT-TYPE
+		SYNTAX  ReservationEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { reservationIndex }
+	::= { dlkEnterpriseReservationTable 1 }
+
+	ReservationEntry ::= SEQUENCE {
+			reservationIndex INTEGER,         
+            reservationList OCTET STRING          
+         	}
+
+	reservationIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of reservation list. "
+	::= { ReservationEntry 1 }
+
+	reservationList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the reservation list. "
+	::= { ReservationEntry 2 }
+	
+	
+	dlkEnterpriseClientListTable OBJECT-TYPE
+		SYNTAX  SEQUENCE OF ClientListEntry
+		ACCESS  not-accessible
+		STATUS  mandatory
+		DESCRIPTION
+			"The information of client list of DHCP server. "			
+	::= { dlkEnterpriseClientList 1 }
+
+		ClientListEntry OBJECT-TYPE
+		SYNTAX  ClientListEntry
+        ACCESS  not-accessible
+        STATUS  mandatory
+        DESCRIPTION
+             ""
+        INDEX   { clientListIndex }
+	::= { dlkEnterpriseClientListTable 1 }
+
+	ClientListEntry ::= SEQUENCE {
+			clientListIndex INTEGER,         
+            clientList OCTET STRING          
+         	}
+
+	clientListIndex OBJECT-TYPE
+		SYNTAX  INTEGER
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+             " The index of client list. "
+	::= { ClientListEntry 1 }
+
+	clientList OBJECT-TYPE
+		SYNTAX  OCTET STRING          
+        ACCESS  read-only
+        STATUS  mandatory
+        DESCRIPTION
+            " Just show the client list. "
+	::= { ClientListEntry 2 }    
+-- **********************************************************************
+-- *  dlkEnterpriseLANPacketsStatus sections
+-- **********************************************************************
+                                    
+	dlkLANTxFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the transmitted count of frame for WAN."
+    ::= { dlkLANTransmittedFrame 1 }
+    
+    dlkLANTxMulticastFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the multicast transmitted count of frame for WAN."
+    ::= { dlkLANTransmittedFrame 2 }
+    
+    dlkLANTxErrorFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the transmitted count of error frame for WAN."
+    ::= { dlkLANTransmittedFrame 3 }
+    
+    dlkLANRxFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the received count of frame for WAN."
+    ::= { dlkLANReceivedFrame 1 }
+    
+    dlkLANRxMulticastFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the multicast received count of frame for WAN."
+    ::= { dlkLANReceivedFrame 2 }
+    
+    dlkLANRxErrorFrameCount  OBJECT-TYPE
+    	SYNTAX  Counter32
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION
+                "Show the received count of error frame for WAN."
+    ::= { dlkLANReceivedFrame 3 }
+                                      
+	
+-- **********************************************************************
+-- *    End of DWL3250 MIB CONFORMANCE
+-- **********************************************************************
+
+
+END

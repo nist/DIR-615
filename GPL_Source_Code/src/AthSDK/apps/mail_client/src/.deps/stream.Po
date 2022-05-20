@@ -1,0 +1,56 @@
+stream.o stream.o: stream.c ../config.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/stdio.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/features.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_config.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/cdefs.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stddef.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/types.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/kernel_types.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/pthreadtypes.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/sched.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_stdio.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/wchar.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/wchar.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stdarg.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/stdio_lim.h \
+  ../gnulib/gettext.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/string.h \
+  ../gnulib/xvasprintf.h stream.h
+
+../config.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/stdio.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/features.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_config.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/cdefs.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stddef.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/types.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/kernel_types.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/pthreadtypes.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/sched.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_stdio.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/wchar.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/wchar.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stdarg.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/stdio_lim.h:
+
+../gnulib/gettext.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/string.h:
+
+../gnulib/xvasprintf.h:
+
+stream.h:

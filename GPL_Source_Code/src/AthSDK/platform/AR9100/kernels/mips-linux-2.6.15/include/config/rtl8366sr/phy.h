@@ -1,0 +1,1 @@
+#undef CONFIG_RTL8366SR_PHY

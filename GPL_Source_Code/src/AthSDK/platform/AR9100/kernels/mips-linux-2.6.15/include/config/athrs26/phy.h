@@ -1,0 +1,1 @@
+#define CONFIG_ATHRS26_PHY 1

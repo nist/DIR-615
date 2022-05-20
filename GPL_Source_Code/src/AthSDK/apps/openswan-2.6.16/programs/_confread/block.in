@@ -1,0 +1,8 @@
+# This file defines the set of CIDRs (network/mask-length) to which
+# communication should never be allowed.
+#
+# See @FINALDOCDIR@/policygroups.html for details.
+#
+# $Id: block.in,v 1.1 2008/10/01 02:50:42 ken_chiang Exp $
+#
+

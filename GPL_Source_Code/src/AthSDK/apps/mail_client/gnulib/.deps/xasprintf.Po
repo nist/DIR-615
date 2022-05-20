@@ -1,0 +1,8 @@
+xasprintf.o xasprintf.o: xasprintf.c ../config.h xvasprintf.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stdarg.h
+
+../config.h:
+
+xvasprintf.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stdarg.h:

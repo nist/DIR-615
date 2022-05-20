@@ -1,0 +1,39 @@
+all: hal_build madwifi_build madwifi_tools wireless_tools #wifi_simple_config
+
+
+hal_build:
+	(. $(PLATFORM_PATH)/configs/config.$(AP_TYPE); \
+	cd $(HAL)/common/hal/linux && make TARGET=$(MADWIFITARGET) clean \
+	&& make TARGET=$(MADWIFITARGET) && make TARGET=$(MADWIFITARGET) release)
+
+madwifi_build:
+	. $(PLATFORM_PATH)/configs/config.$(AP_TYPE);  \
+	cd $(WL_PATH)/wlan/linux && \
+	ln -sf ../common ./common; \
+	$(MAKEARCH) TARGET=$(MADWIFITARGET) clean && \
+	$(MAKEARCH) TARGET=$(MADWIFITARGET) && \
+	$(MAKEARCH) TARGET=$(MADWIFITARGET) install
+
+madwifi_tools:
+	cd $(WL_PATH)/wlan/linux/tools && make ath_tools #BINDIR=$(FS_PATH)/sbin install 
+
+wireless_tools:
+	cd $(WL_PATH)/wireless_tools.28; make PREFIX=$(FS_PATH) all && make PREFIX=$(FS_PATH) install; 
+
+openssl:
+	cd ../apps/wpa/wsc/lib/openssl-0.9.8a; \
+	make clean; sudo make; sudo cp -f libssl.a $(TOOLPATH)/lib;  \
+	sudo cp -f libcrypto.a $(TOOLPATH)/lib;
+
+wifi_simple_config: openssl
+	cd ../apps/wpa/wsc/src/linux; make clean; make; \
+	sudo make PREFIX=$(FS_PATH)/sbin CONFIG_PATH=$(FS_PATH)/etc/wlan DEFAULT_CFG=$(FS_PATH)/etc/wlan/default install;							
+
+clean:
+	cd $(HAL)/linux && make TARGET=$(MADWIFITARGET) clean
+	cd $(WL_PATH)/wireless_tools.28; make realclean
+	cd ../apps/wpa/wsc/lib/openssl-0.9.8a; make clean;	
+	cd ../apps/wpa/wsc/src/linux; make clean;	
+install:	
+	
+	

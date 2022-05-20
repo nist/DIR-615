@@ -1,0 +1,139 @@
+tools.o tools.o: tools.c ../config.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/stdio.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/features.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_config.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/cdefs.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stddef.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/types.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/kernel_types.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/pthreadtypes.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/sched.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_stdio.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/wchar.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/wchar.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stdarg.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/stdio_lim.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/stdlib.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/waitflags.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/waitstatus.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/endian.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/endian.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/types.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/time.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/select.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/select.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/sigset.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/time.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/sysmacros.h \
+  ../gnulib/alloca.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/string.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/errno.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/errno.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/errno_values.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/fcntl.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/fcntl.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/stat.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/stat.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_clk_tck.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/unistd.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/posix_opt.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/environments.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/wordsize.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/confname.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/getopt.h \
+  /opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/pwd.h \
+  ../gnulib/gettext.h ../gnulib/xalloc.h tools.h
+
+../config.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/stdio.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/features.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_config.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/cdefs.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stddef.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/types.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/kernel_types.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/pthreadtypes.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/sched.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_stdio.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/wchar.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/wchar.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/include/stdarg.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/stdio_lim.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/stdlib.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/waitflags.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/waitstatus.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/endian.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/endian.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/types.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/time.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/select.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/select.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/sigset.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/time.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/sysmacros.h:
+
+../gnulib/alloca.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/string.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/errno.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/errno.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/errno_values.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/fcntl.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/fcntl.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/sys/stat.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/stat.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/uClibc_clk_tck.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/unistd.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/posix_opt.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/environments.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/wordsize.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/confname.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/bits/getopt.h:
+
+/opt/ap71_tools/mips32k/bin/../lib/gcc/mips-linux-uclibc/3.4.4/../../../../mips-linux-uclibc/sys-include/pwd.h:
+
+../gnulib/gettext.h:
+
+../gnulib/xalloc.h:
+
+tools.h:

@@ -1,0 +1,473 @@
+# Special targets
+# 
+SLARCH:=$(patsubst %-,%,$(APPS_CROSS))
+INSTALL ?= install
+#SVNPACKAGE:=http://172.21.33.134/repos/router/trunk/packages
+
+CFLAGS_EXT:=
+
+ifeq ($(CONFIG_NVRAM), y)
+CFLAGS_EXT+= -D__USE_ATH_BASE_NVRAM
+NVRAM_BASE ?= $(APPS_PATH)/nvram
+endif
+ifeq ($(CONFIG_LINUX_NVRAM), y)
+NVRAM_BASE ?= $(APPS_PATH)/linux_nvram
+endif
+
+##############################################################
+# 	GNU awk
+##############################################################
+gawk-3.1.6/.configured:
+	chmod +x gawk-3.1.6/configure
+	cd gawk-3.1.6;./configure				\
+		--target=$(SLARCH)				\
+		--host=$(SLARCH)				\
+		--prefix=$(TARGET)
+	@touch $@
+
+gawk-3.1.6: gawk-3.1.6/.configured
+	@make -C $@
+	
+gawk-3.1.6-install:
+	chmod +x gawk-3.1.6/install-sh
+	@make -C gawk-3.1.6 install
+	
+#############################################################
+# 	GMP library
+#############################################################
+gmp-4.2.2/.configured:
+	cd gmp-4.2.2;./configure				\
+		--target=$(SLARCH)				\
+		--host=$(SLARCH)				\
+		--prefix=$(TARGET)				\
+		--enable-static 				\
+		--enable-shared 				\
+		--disable-nls					
+	@touch $@
+
+
+gmp-4.2.2: gmp-4.2.2/.configured
+	@$(MAKE) -C $@
+
+gmp-4.2.2-install:
+	$(MAKE) -C gmp-4.2.2 install
+	rm -rf $(TARGET)/include $(TARGET)/info $(TARGET)/lib/libgmp.a
+
+
+############################################################
+# openswan: IPSec packages
+###########################################################
+openswan-2.6.16/.configured:
+#	svn co $(SVNPACKAGE)/openswan-2.6.16
+	touch $@
+	
+
+#openswan-2.6.16: gawk-3.1.6 gmp-4.2.2 openswan-2.6.16/.configured
+openswan-2.6.16: openswan-2.6.16/.configured
+	chmod +x $@/packaging/utils/makeshadowdir
+	CC=arm-linux-gcc LD=arm-linux-ld			\
+	LDFLAGS="-L`pwd`/gmp-4.2.2/.libs/"			\
+	CFLAGS=""						\
+	$(MAKE) programs -C $@ USERCOMPILE="-I `pwd`/gmp-4.2.2/"  INC_USRLOCAL=/usr
+
+openswan-2.6.16-install: gmp-4.2.2-install
+	[ -d "$(TARGET)" ] || exit 1
+	$(MAKE) -C openswan-2.6.16 install DESTDIR=$(TARGET) INC_USRLOCAL=/usr
+	#echo make -C openswan-2.6.14 install DESTDIR=$(TARGET)
+	rm -rf $(TARGET)/share/locale $(TARGET)/usr/info		\
+		$(TARGET)/usr/man $(TARGET)/usr/share/doc
+	cd $(TARGET); rm -fr etc/ipsec.conf etc/ipsec.secrets		\
+		etc/ipsec.d etc/init.d/rc?\.d
+	ln -sf /tmp/ipsec.d ${TARGET}/etc/ipsec.d
+	cd $(TARGET); ln -sf /tmp/ipsec.conf etc/ipsec.conf;		\
+		ln -sf /tmp/ipsec.secrets etc/ipsec.secrets
+	rm -rf $(TARGET)/usr/lib/ipsec/*.old
+	rm -rf $(TARGET)/usr/sbin/ipsec.old
+	rm -rf $(TARGET)/usr/libexec/ipsec/*.old
+	cd $(TARGET)/usr/libexec/ipsec &&				\
+	for f in *; do (if file $$f | grep ARM > /dev/null; then 	\
+		( $(STRIP) --strip-unneeded $$f); fi); done
+
+
+##############################################################
+# 	CLI commands
+##############################################################
+cmds/.unpacked:
+#	svn co $(SVNPACKAGE)/cmds
+	touch $@
+
+#cmds: cmds/.unpacked
+cmds: 
+	CFLAGS="-I$(NVRAM_BASE) $(CFLAGS_EXT) -DCONFIG_BCM_IPSEC"	\
+	LDFLAGS="-L$(NVRAM_BASE)" make -C ../www/DIR-730/$@
+
+cmds-install:
+	$(MAKE) -C ../www/DIR-730/cmds install INSTALLDIR=$(TARGET)
+cmds-clean:
+	$(MAKE) -C ../www/DIR-730/cmds clean INSTALLDIR=$(TARGET)
+
+################################################################
+# 	CGI: A cgi ssi/ssc of http
+###############################################################
+
+cgi/.unpacked:
+#	svn co $(SVNPACKAGE)/cgi
+	touch $@
+
+#cgi: cgi/.unpacked
+cgi:
+	CFLAGS=\"$(CFLAGS_EXT)\" LDFLAGS=\"\" \
+	$(MAKE) -C ../www/DIR-730/$@ DBINC_PATH=$(NVRAM_BASE) DBLIB_PATH=$(NVRAM_BASE)
+	
+cgi-install:
+	$(MAKE) -C ../www/DIR-730/cgi install INSTALLDIR=$(TARGET)
+cgi-clean:
+	$(MAKE) -C ../www/DIR-730/cgi clean 
+###############################################################
+# 	Busybox: support https
+###############################################################
+busybox-1.6.1/configured:
+#	svn co $(SVNPACKAGE)/busybox-1.6.1
+	touch $@
+busybox-1.6.1/.config:
+	cp -f busybox-1.6.1/scripts/defconfig-dir730 $@
+
+busybox-1.6.1: busybox-1.6.1/configured busybox-1.6.1/.config
+	@chmod +x $@/scripts/mkconfigs
+	@chmod +x $@/applets/usage_compressed
+	@chmod +x $@/scripts/trylink
+	CFLAGS="-DPIPE_BUF=1024 -DMAX_MEMORY_BUFF=1400" $(MAKE) -C $@
+
+busybox-1.6.1-install:
+	$(MAKE) -C busybox-1.6.1 CONFIG_PREFIX=$(TARGET) install
+
+###############################################################
+# 	libpcap for snort, or pppd >= 2.4.4 special feature.
+###############################################################
+libpcap-0.9.8/.unpacked:
+#	svn co $(SVNPACKAGE)/libpcap-0.9.8
+	touch $@
+
+libpcap-0.9.8/.configured:libpcap-0.9.8/.unpacked
+	cd libpcap-0.9.8;					\
+	chmod +x configure;					\
+	ac_cv_linux_vers=$(KERNEL_PATH)				\
+	BUILD_CC=$(SLARCH)-gcc HOSTCC="$(HOSTCC)"		\
+	./configure --target=arm-linux				\
+	--host=arm-linux --build=i386-pc-linux-gnu		\
+	--prefix=/usr --localstatedir=/var			\
+	--mandir=/usr/share/man					\
+	--infodir=/usr/share/info				\
+	--disable-yydebug					\
+	--with-pcap=linux --disable-ipv6
+	touch $@
+	
+libpcap-0.9.8: libpcap-0.9.8/.configured
+	$(MAKE) AR=$(SLARCH)-ar -C $@
+
+libpcap-0.9.8-install:
+	$(MAKE) DESTDIR=$(TARGET) -C libpcap-0.9.8 install
+
+#############################################################
+#	libpcre for snort
+############################################################
+pcre-7.7/.unpacked:
+#	svn co $(SVNPACKAGE)/pcre-7.7
+	touch $@
+	
+pcre-7.7/.configured:pcre-7.7/.unpacked
+	cd pcre-7.7; chmod +x configure;			\
+	./configure --disable-cpp --host=arm-linux
+	touch $@
+	
+pcre-7.7:pcre-7.7/.configured
+	$(MAKE) -C $@
+	
+pcre-7.7-install:
+	echo "NO INSTALL NEED"
+############################################################
+# 	snort: IPS/IDS
+###########################################################
+snort-2.8.2.2/.unpackedbin:
+#	svn co $(SVNPACKAGE)/snort-2.8.2.2
+	touch $@
+
+snort-2.8.2.2/.unpackedso:
+	touch $@
+
+snort-2.8.2.2/.configuredbin: snort-2.8.2.2/.unpackedbin
+	cd snort-2.8.2.2; chmod +x configure; CC=arm-linux-gcc	\
+	./configure --host=arm				\
+	--with-libpcre-libraries=$(APPS_PATH)/pcre-7.7/.libs/	\
+	--with-libpcre-includes=$(APPS_PATH)/pcre-7.7		\
+	--with-libpcap-libraries=$(APPS_PATH)/libpcap-0.9.8	\
+	--with-libpcap-includes=$(APPS_PATH)/libpcap-0.9.8	
+	touch $@
+
+snort-2.8.2.2/.bin: snort-2.8.2.2/.configuredbin
+	$(MAKE) -C snort-2.8.2.2
+	cp snort-2.8.2.2/src/snort $(TARGET)/sbin
+	cp pcre-7.7/.libs/libpcre.so.0 $(TARGET)/lib
+	cd snort-2.8.2.2; make clean
+
+snort-2.8.2.2/.configuredso: snort-2.8.2.2/.unpackedso
+	cd snort-2.8.2.2; chmod +x configure; CC=arm-linux-gcc  \
+	./configure --host=arm-linux                    \
+	--with-libpcre-libraries=$(APPS_PATH)/pcre-7.7/.libs/   \
+	--with-libpcre-includes=$(APPS_PATH)/pcre-7.7           \
+	--with-libpcap-libraries=$(APPS_PATH)/libpcap-0.9.8     \
+	--with-libpcap-includes=$(APPS_PATH)/libpcap-0.9.8      
+	touch $@
+
+snort-2.8.2.2/.so: snort-2.8.2.2/.configuredso
+	$(MAKE) -C snort-2.8.2.2
+	install -d $(TARGET)/usr/lib/snort_dynamicengine
+	install -d $(TARGET)/usr/lib/snort_dynamicpreprocessor
+	cp snort-2.8.2.2/src/dynamic-plugins/sf_engine/.libs/libsf_engine.so \
+		$(TARGET)/usr/lib/snort_dynamicengine/libsf_engine.so
+	find snort-2.8.2.2/src/dynamic-preprocessors/ -name "*.so" \
+		-exec cp {} $(TARGET)/usr/lib/snort_dynamicpreprocessor \;
+
+snort-2.8.2.2-install:
+	echo "NO INSTALL NEED"
+
+snort-2.8.2.2: snort-2.8.2.2/.bin snort-2.8.2.2/.so
+
+###########################################################
+# openssl for IPSec X509 parser, https, openvpn.
+###########################################################
+openssl-0.9.8h/.unpacked:
+#	svn co $(SVNPACKAGE)/openssl-0.9.8h
+	touch $@
+	
+openssl-0.9.8h/.configured: openssl-0.9.8h/.unpacked
+	#-cd openssl-0.9.8h;./config no-asm linux-elf-arm
+	-cd openssl-0.9.8h;./Configure linux-generic32 no-asm shared
+	-cd openssl-0.9.8h/include/openssl;			\
+	for i in *.h;do echo "$$i";				\
+	[ -f $$i ] && cat $$i|awk "{print \$$2,\"$$i\";}"|xargs ln -sf ;\
+	done
+	-cd openssl-0.9.8h/test;				\
+	for i in *.c;do echo "$$i";				\
+	[ -f $$i ] && cat $$i|awk "{print \$$2,\"$$i\";}"|xargs ln -sf ;\
+	done
+	touch $@
+	
+	
+openssl-0.9.8h: openssl-0.9.8h/.configured
+	$(MAKE) -C $@ CC=$(SLARCH)-gcc LD=$(SLARCH)-ld
+	
+openssl-0.9.8h-install:
+	(cd openssl-0.9.8h;cp libssl.so.0.9.8 $(TARGET)/lib;	\
+		cp libcrypto.so.0.9.8 $(TARGET)/lib;		\
+		cd apps;cp openssl $(TARGET)/sbin )
+	$(STRIP) $(TARGET)/lib/libssl.so.0.9.8
+	$(STRIP) $(TARGET)/lib/libcrypto.so.0.9.8
+	$(STRIP) $(TARGET)/sbin/openssl
+
+###########################################################
+#	sslvpn packages
+###########################################################
+openvpn-2.1_rc9/.unpacked:
+#	svn co $(SVNPACKAGE)/openvpn-2.1_rc9
+	touch $@
+	
+openvpn-2.1_rc9/.configured: openvpn-2.1_rc9/.unpacked
+	cd openvpn-2.1_rc9;					\
+	chmod +x configure;					\
+	./configure  --enable-small				\
+	--with-ssl-headers=$(APPS_PATH)/openssl-0.9.8h/include	\
+	--with-ssl-lib=$(APPS_PATH)/openssl-0.9.8h/		\
+	--host=arm-linux --target=arm-linux --disable-lzo
+	touch $@
+
+openvpn-2.1_rc9:openvpn-2.1_rc9/.configured
+	$(MAKE) -C $@
+	
+openvpn-2.1_rc9-install:
+	$(INSTALL) -m 755 openvpn-2.1_rc9/openvpn $(TARGET)/sbin
+	$(STRIP) $(TARGET)/sbin/openvpn
+##############################################################
+# LINUX_NVRAM
+###############################################################
+linux_nvram/.unpacked:
+#	svn co $(SVNPACKAGE)/linux_nvram
+	touch $@
+
+linux_nvram:linux_nvram/.unpacked
+	$(MAKE) -C $@ KERNELDIR=$(KERNEL_PATH) 
+	if [ ! -d nvram_ath ];then				\
+		mv nvram nvram_ath;				\
+		ln -s linux_nvram nvram;			\
+	fi
+linux_nvram-install:
+	cd linux_nvram;						\
+	$(INSTALL) -d $(TARGET)/bin;				\
+	$(INSTALL) -m 755 nvram $(TARGET)/bin;			\
+	$(INSTALL) -d $(TARGET)/lib;				\
+	$(INSTALL) -m 644 libnvram.so $(TARGET)/lib/;		\
+	$(INSTALL) -m 644 devnvram.ko $(TARGET)/lib/
+	$(STRIP) $(TARGET)/bin/nvram
+	$(STRIP) $(TARGET)/lib/libnvram.so
+
+###############################################################
+# 	inadyn for ddns
+##############################################################
+inadyn/.unpacked:
+#	svn co $(SVNPACKAGE)/inadyn
+	touch $@
+
+inadyn: inadyn/.unpacked
+	CFLAGS="-I$(NVRAM_BASE) $(CFLAGS_EXT)"	\
+	LDFLAGS="-L$(NVRAM_BASE)" make -C $@
+
+inadyn-install:
+	$(MAKE) -C inadyn install INSTALLDIR=$(TARGET)
+
+##################################################################
+#	PPP: ppp-2.4.4 support active-filter for dail-on-demand
+##################################################################
+
+ppp-2.4.4/.unpacked:
+#	svn co  $(SVNPACKAGE)/ppp-2.4.4
+	touch $@
+ppp-2.4.4/.configured: ppp-2.4.4/.unpacked
+	(cd ppp-2.4.4; rm -rf config.cache;		\
+		chmod +x ./configure;			\
+		./configure				\
+		--target=arm-linux			\
+		--host=arm-linux			\
+		--prefix=/				\
+		--exec-prefix=/usr			\
+		--bindir=/usr/bin			\
+		--sbindir=/usr/sbin			\
+		--libdir=/lib				\
+		--libexecdir=/usr/lib			\
+		--sysconfdir=/etc			\
+		--datadir=/usr/share			\
+		--localstatedir=/var			\
+		--mandir=/usr/man			\
+		--infodir=/usr/info			\
+	)
+	touch $@
+	
+ppp-2.4.4: libpcap-0.9.8 ppp-2.4.4/.configured
+	 $(MAKE) COPTS="-O2 -pipe -Wall -I$(APPS_PATH)/libpcap-0.9.8 -L$(APPS_PATH)/libpcap-0.9.8" -C $@
+ppp: ppp-2.4.4
+
+ppp-2.4.4-install:
+	$(MAKE) install -C ppp-2.4.4 INSTROOT=$(TARGET)
+	rm -fr $(TARGET)/usr/man $(TARGET)/usr/info $(TARGET)/include
+
+ppp-install:ppp-2.4.4-install
+
+#####################################################
+#	pptp client: we select pptp package instead!
+#####################################################
+pptp:
+	$(MAKE) -C $@
+
+accel-pptp-0.7.12: pptp
+	
+
+accel-pptp-0.7.12-install:pptp-install
+	
+
+#####################################################
+#	pptpd: pptpd server.
+#####################################################
+pptpd-1.3.4/.configured:
+	cd pptpd-1.3.4;./configure --host=arm-linux --target=arm-linux
+	touch $@
+
+pptpd-1.3.4: pptpd-1.3.4/.configured
+	$(MAKE) -C $@
+	
+pptpd-1.3.4-install:
+	$(INSTALL) -d -m 755 $(TARGET)/usr/local/sbin
+	$(INSTALL) -m 755 pptpd-1.3.4/pptpd $(TARGET)/usr/local/sbin
+	$(INSTALL) -m 755 pptpd-1.3.4/pptpctrl $(TARGET)/usr/local/sbin
+	$(STRIP) $(TARGET)/usr/local/sbin/pptpd
+	$(STRIP) $(TARGET)/usr/local/sbin/pptpctrl
+######################################################
+# To patch from storlink's time modules for HNAT.
+# in order to create new patch following.
+# cvs diff -u8p . > patch
+######################################################
+iptables_2_6/.configured:
+	cp $(PRJ_PATH)/platform/$(PLATFORM)/iptables-1.3.4.patch iptables_2_6
+	cd iptables_2_6;patch -p0 < iptables-1.3.4.patch
+	touch $@
+
+iptables_2_6:iptables_2_6/.configured
+	$(MAKE) -C $@ NO_SHARED_LIBS=1
+	
+#####################################################
+#	oray: china DDNS service.
+#####################################################
+oray:
+	$(MAKE) -C oray CC=$(CC)
+
+oray-install: oray
+        $(MAKE) -C oray INSTALLDIR=$(TARGET) install
+
+oray-clean:
+	$(MAKE) -C oray clean
+
+#####################################################
+#	freeradius-client
+#####################################################
+freeradius-client-1.1.6/.configured:
+	cd freeradius-client-1.1.6;		\
+		./configure --target=arm-linux	\
+		--host=arm-linux		\
+		--program-prefix=""
+	touch $@
+
+freeradius-client-1.1.6: freeradius-client-1.1.6/.configured
+	make -C $@
+
+freeradius-client-1.1.6-install:
+	echo XXXXX
+
+######################################################
+#       crowdcontrol - url filter utility
+######################################################
+
+crowdcontrol:
+	$(MAKE) -C crowdcontrol CC=$(CC)
+
+crowdcontrol-install: crowdcontrol
+	$(MAKE) -C crowdcontrol INSTALLDIR=$(TARGET) install
+
+crowdcontrol-clean:
+	$(MAKE) -C crowdcontrol clean
+
+########################################################
+#	LDAP server
+########################################################
+openldap-2.4.11/.configured:
+	@cd openldap-2.4.11/;					\
+		CC=arm-linux-gcc AR=arm-linux-ar		\
+		./configure --host=arm-linux --target=arm-linux \
+		--enable-slapd=no --without-threads --prefix=/
+	@touch $@
+	
+openldap-2.4.11: openldap-2.4.11/.configured
+	make -C $@
+	
+openldap-2.4.11-install:
+	echo XXXXXXXX
+
+pptp-install:
+	cd pptp; mkdir -p $(TARGET)/sbin;install -m 555 pptp $(TARGET)/sbin
+
+#######################################################
+#	sutil
+#######################################################
+sutil/project.h:
+	ln -s project.h.sample sutil/project.h
+sutil: sutil/project.h
+	$(MAKE)	-C $@
+
+.PHONY:gawk-3.1.6 cmds ppp-2.4.4 pptp inadyn pptpd-1.3.4 iptables-1.3.4 ppp freeradius-client-1.1.6

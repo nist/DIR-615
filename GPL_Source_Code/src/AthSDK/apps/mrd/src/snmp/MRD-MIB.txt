@@ -1,0 +1,100 @@
+MRD-MIB DEFINITIONS ::= BEGIN
+
+	IMPORTS
+		MODULE-IDENTITY, OBJECT-TYPE,
+		enterprises			FROM SNMPv2-SMI
+		TruthValue			FROM SNMPv2-TC
+		InetAddressIPv6			FROM INET-ADDRESS-MIB
+		InterfaceIndex			FROM IF-MIB;
+
+	ITav MODULE-IDENTITY
+		LAST-UPDATED "200412230000Z"
+		ORGANIZATION "Instituto de Telecomunicacoes, Polo de Aveiro"
+		CONTACT-INFO
+			"To write."
+		DESCRIPTION
+			"ITav root MIB."
+		::= { enterprises 23 }
+
+	mrdMIB MODULE-IDENTITY
+		LAST-UPDATED "200412230000Z"
+		ORGANIZATION "Instituto de Telecomunicacoes, Polo de Aveiro"
+		CONTACT-INFO
+			" Hugo Santos
+			  IT-Aveiro, Portugal
+
+			  email: hsantos@av.it.pt"
+		DESCRIPTION
+			"The MIB module for MRD Management."
+		REVISION "200412230000Z"
+		DESCRIPTION
+			"Development version."
+		::= { ITav 23 }
+
+	mrdInfo			OBJECT IDENTIFIER
+		::= { mrdMIB 1 }
+
+	mrdName			OBJECT-TYPE
+		SYNTAX		STRING
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"Implementation description."
+		::= { mrdInfo 1 }
+
+	mrdVersion		OBJECT-TYPE
+		SYNTAX		INTEGER
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"Implementation version."
+		::= { mrdInfo 2 }
+
+	mrdInterfaceTable	OBJECT-TYPE
+		SYNTAX		SEQUENCE OF MRDInterfaceEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION
+			"Interface table."
+		::= { mrdMIB 2 }
+
+	mrdInterfaceEntry	OBJECT-TYPE
+		SYNTAX		MRDInterfaceEntry
+		MAX-ACCESS	not-accessible
+		STATUS		current
+		DESCRIPTION
+			"An interface table entry."
+		INDEX		{ mrdInterfaceIfIndex }
+		::= { mrdInterfaceTable 1 }
+
+	MRDInterfaceEntry ::= SEQUENCE {
+		mrdInterfaceName	STRING,
+		mrdInterfacePrimaryAddr	InetAddressIPv6
+		mrdInterfaceEnabled	TruthValue
+	}
+
+	mrdInterfaceName	OBJECT-TYPE
+		SYNTAX		STRING
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"The router interface name."
+		::= { mrdInterfaceEntry 1 }
+
+	mrdInterfacePrimaryAddr	OBJECT-TYPE
+		SYNTAX		InetAddressIPv6 (SIZE(16))
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"The router interface's primary address."
+		::= { mrdInterfaceEntry 2 }
+
+	mrdInterfaceEnabled	OBJECT-TYPE
+		SYNTAX		TruthValue
+		MAX-ACCESS	read-only
+		STATUS		current
+		DESCRIPTION
+			"Whether an interface is enabled or not."
+		::= { mrdInterfaceEntry 3 }
+END
+

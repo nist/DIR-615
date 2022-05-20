@@ -1,0 +1,25 @@
+
+OS_LAYER = osl-linux.c
+
+CC = gcc
+CFLAGS = -pipe -Wall -Wno-unused -O3 -g
+
+LDFLAGS = 
+
+##CFILES = $(OS_LAYER) main.c event.c util.c packetio.c band.c state.c seeslist.c tlv.c
+CFILES = $(OS_LAYER) main.c event.c util.c packetio.c band.c state.c sessionmgr.c enumeration.c mapping.c seeslist.c tlv.c
+
+OBJFILES = $(patsubst %c,%o,$(CFILES))
+
+all: dep lld2d
+
+clean:
+	rm -f .depend *~ lld2d $(OBJFILES)
+
+lld2d: $(OBJFILES)
+	$(CC) $(CFLAGS) -o lld2d-x86  $(OBJFILES) $(LDFLAGS)
+
+dep:
+	$(CC) $(CFLAGS) -M $(CFILES) >.depend
+
+-include .depend

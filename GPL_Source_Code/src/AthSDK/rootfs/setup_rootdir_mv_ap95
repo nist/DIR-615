@@ -1,0 +1,125 @@
+#!/bin/sh
+
+EXTRAVERSION=
+if [ -f $KERNELPATH/ath_version.mk ]
+then
+    . $KERNELPATH/ath_version.mk
+fi
+
+if [ -f busybox.links ]
+then
+    cat busybox.links | sed 's/\//ln -s -f \/bin\/busybox target\//' | /bin/sh
+fi
+
+if [ ! -d target/dev ]
+then
+    mkdir target/dev
+    chmod 755 target/dev
+fi
+
+if [ ! -d target/proc ]
+then
+    mkdir target/proc
+    chmod 755 target/proc
+fi
+
+#if [ ! -d target/tmp ]
+#then
+#    mkdir target/tmp
+#    chmod 755 target/tmp
+#fi
+
+#if [ ! -d target/mnt ]
+#then
+#    mkdir target/mnt
+#    chmod 755 target/mnt
+#fi
+
+#if [ ! -d target/lib/modules/2.4.25$EXTRAVERSION/net ]
+#then
+#    mkdir -p target/lib/modules/2.4.25$EXTRAVERSION/net
+#    chmod 755 target/lib/modules/2.4.25$EXTRAVERSION/net
+#fi
+
+#if [ ! -d target/lib/modules/2.4.25$EXTRAVERSION/misc ]
+#then
+#    mkdir -p target/lib/modules/2.4.25$EXTRAVERSION/misc
+#    chmod 755 target/lib/modules/2.4.25$EXTRAVERSION/misc
+#fi
+
+cons=" root tty    666"
+pty="  root tty    666"
+disk=" root disk   666"
+mtd="  root root   666"
+null=" root root   666"
+watchdog="  root root   666"
+gpio="	root root 666"
+ppp=" root root 666"
+ptmx=" root root 666"
+
+makedev () {    # usage: makedev name [bcu] major minor owner group mode
+        if [ "$opt_v" ]
+        then    if [ "$opt_d" ]
+                then    echo "rm -f $1"
+                else    echo "$1        = $2 $3 $4 $5:$6 $7"
+                fi
+        fi
+        [ ! "$opt_n" ] && rm -f $1 &&
+        [ ! "$opt_d" ] && mknod $1 $2 $3 $4 &&
+                chown $5:$6 $1 &&
+                chmod $7 $1
+}
+
+makedev target/dev/console c 5 1 $cons
+makedev target/dev/caldata b 31 4 $mtd
+
+makedev target/dev/ram  b 1 1 $disk
+makedev target/dev/ram0 b 1 0 $disk
+
+makedev target/dev/mtd0  c 90 0 $mtd
+makedev target/dev/mtd1  c 90 2 $mtd
+makedev target/dev/mtd2  c 90 4 $mtd
+makedev target/dev/mtd3  c 90 6 $mtd
+makedev target/dev/mtd4  c 90 8 $mtd
+makedev target/dev/mtd5  c 90 10 $mtd
+makedev target/dev/mtd6  c 90 12 $mtd
+makedev target/dev/mtdr0 c 90 1 $mtd
+
+makedev target/dev/mtdblock0 b 31 0 $mtd
+makedev target/dev/mtdblock1 b 31 1 $mtd
+makedev target/dev/mtdblock2 b 31 2 $mtd
+makedev target/dev/mtdblock3 b 31 3 $mtd
+makedev target/dev/mtdblock4 b 31 4 $mtd
+makedev target/dev/mtdblock5 b 31 5 $mtd
+makedev target/dev/mtdblock6 b 31 6 $mtd
+
+makedev target/dev/mem	   c 1 1 $mtd		
+makedev target/dev/kmem	   c 1 2 $mtd
+makedev target/dev/null    c 1 3 $null
+makedev target/dev/random  c 1 8 $mtd
+makedev target/dev/urandom c 1 9 $mtd
+
+makedev target/dev/ptyp0   c 2 0 $pty
+makedev target/dev/ptyp1   c 2 1 $pty
+makedev target/dev/ptyp2   c 2 2 $pty
+
+makedev target/dev/ttyp0   c 3 0 $pty
+makedev target/dev/ttyp1   c 3 1 $pty
+makedev target/dev/ttyp2   c 3 2 $pty
+makedev target/dev/ttyS0   c 4 64 root root    600
+makedev target/dev/ptmx    c 5 2 $ptmx
+
+makedev target/dev/watchdog c 10 130 $watchdog
+makedev target/dev/gpio_ioctl c 201 0 $gpio
+makedev target/dev/ppp  c 108 0 $ppp
+
+makedev target/dev/ttyUSB0 c 188 0 $pty
+makedev target/dev/ttyUSB1 c 188 1 $pty
+makedev target/dev/ttyUSB2 c 188 2 $pty
+makedev target/dev/dk0	c 63 0 $null
+makedev target/dev/dk1  c 63 1 $null
+
+makedev target/dev/sdb b 8 16 $mtd
+makedev target/dev/sdb1 b 8 17 $mtd
+
+ln -sf  ./../var/log/log target/dev/log

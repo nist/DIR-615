@@ -1,0 +1,14 @@
+  SNMP Versions Supported:    1 2c 3
+  Net-SNMP Version:           5.3.1
+  Building for:               elf
+  Network transport support:  Callback Unix TCP UDP
+  SNMPv3 Security Modules:    usm
+  *** MIB Module warning *** mib module 'snmpv3mibs' is both included and excluded. It has been excluded.
+  *** MIB Module warning *** mib module 'mibII/snmp_mib' is both included and excluded. It has been excluded.
+  *** MIB Module warning *** mib module 'mibII/system_mib' is both included and excluded. It has been excluded.
+  *** MIB Module warning *** mib module 'mibII/sysORTable' is both included and excluded. It has been excluded.
+  Agent MIB code:             mibII/vacm_vars utilities/execute dlink applicationRuleTable dlkEnterpriseClientListTable dlkEnterpriseReservationTable dlkEnterpriseScanListTable macFilterTable portForwardingTable scheduleRuleTable virtualServerTable webFilterTable
+  SNMP Perl modules:          disabled
+  Embedded perl support:      disabled
+  Authentication support:     MD5
+  Encryption support:         

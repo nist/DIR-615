@@ -1,0 +1,1055 @@
+#
+# For a description of the syntax of this configuration file,
+# see Kconfig-language.txt
+#
+
+mainmenu "Router Configuration"
+
+menu "Base Features"
+
+config CONFIG_LIBVERSION
+	bool "Library for version"
+	default y
+	help
+	Library for version
+
+config CONFIG_VCT
+	bool "VCT support"
+	depends on CONFIG_LIBVERSION
+	default y
+	help
+	If you do not write VCT driver in platform, turn it off
+
+config CONFIG_NVRAM
+       bool "NVRAM support"
+       default y
+       help
+       Answer Y for user mode NVRAM support.  The NVRAM support
+       library is used by several applications here and in the Options
+       menu, including rc, wlconf, httpd, upnp, nas, ses, and wcn.
+
+config CONFIG_RESERVATE_WIRELESS_DOMAIN
+	bool "CFG_RESERVATE_WIRELESS_DOMAIN"
+	depends on CONFIG_NVRAM
+	default n
+	help
+	If you do not reservation wireless domain in device, turn it off
+
+config CONFIG_GET_SET_ARTBLOCK
+	 bool "ARTBLOCK support"
+	 default n
+	 help
+	 To support get and set hwversion,lanmac,wanmac for ART mtdblock.
+
+config CONFIG_GET_SET_MACBLOCK
+         bool "MACBLOCK support"
+         default n
+         help
+         To support get and set hwversion,lanmac,wanmac for MAC mtdblock.
+
+config CONFIG_BUSYBOX
+       bool "BusyBox"
+       default y
+       help
+       BusyBox combines tiny versions of many common UNIX utilities into
+       a single small executable.
+
+config CONFIG_RC
+	 bool "RC (Task Management)"
+	 default y
+       help
+       Task Management to manage processes
+
+choice
+		 prompt "Wirelss module"
+		 default CONFIG_WL_ATH
+		 depends on CONFIG_RC
+		 
+		 config CONFIG_WL_ATH
+		 bool "Atheros"
+
+			config CONFIG_WL_ATH_WITH_N
+                 	bool "Atheros support 802.11n"
+			depends on CONFIG_WL_ATH
+			default n
+		
+			config CONFIG_WL_ATH_MAC_FILTER
+                        bool "Atheros support MAC Filter"
+                        depends on CONFIG_WL_ATH
+                        default n
+			
+			config CONFIG_WL_ATH_WDS
+			bool "Atheros wds feature (ap, bridge, repeater)"
+			depends on CONFIG_WL_ATH
+			default n
+			
+				config CONFIG_WL_ATH_WDS_AP
+	                        bool "Atheros support WDS-AP Mode"
+	                        depends on CONFIG_WL_ATH_WDS
+	                        default n
+				
+				config CONFIG_WL_ATH_WDS_BR
+	                        bool "Atheros support WDS-BRIDGE Mode"
+	                        depends on CONFIG_WL_ATH_WDS
+	                        default n
+		
+				config CONFIG_WL_ATH_WDS_RPT
+	                        bool "Atheros support WDS-REPEAT Mode"
+	                        depends on CONFIG_WL_ATH_WDS
+	                        default n
+			
+			config CONFIG_WL_ATH_5GHZ
+                        bool "Atheros support 5GHz"
+                        depends on CONFIG_WL_ATH
+                        default n
+
+            config CONFIG_WL_ATH_GUEST_ZONE
+            			bool "Atheros support Guest Zone"
+                        depends on CONFIG_WL_ATH
+                        default n            
+
+		 config CONFIG_WL_BCM
+		 bool "Broadcom"
+
+		config CONFIG_WL_MVL
+		 bool "Marvell"
+		 
+endchoice
+
+
+config CONFIG_HEX_MODE_WITH_WIRELESS
+	bool "Wireless SSID Support HEX mode in NVRAM"
+	default n
+
+
+config CONFIG_TIMER
+	bool "Timer for Schedule"
+	default y
+
+config CONFIG_WIRELESS_SCHEDULE
+	bool "Support Wireless Schedule"
+	depends on CONFIG_TIMER
+	default n
+	help
+	Every one mins to check wireless schedule
+
+config CONFIG_SYS
+		 bool "SYS (System Management)"
+		 default y
+		 help
+		 System Management to manage HTTP firmware upgrade procedure
+
+config CONFIG_SUTIL
+		 bool "Shared Utility"
+		 default y
+		 help
+		 Shared Utility
+
+choice
+		 prompt "IP Match"
+		 default CONFIG_IP_MATCH_3
+		 depends on CONFIG_SUTIL
+		 
+		 config CONFIG_IP_MATCH_3
+		 bool "IP match 3"
+
+		 config CONFIG_IP_MATCH_4
+		 bool "IP match 4"
+
+endchoice
+
+
+config CONFIG_NVRAM_SIZE
+       string "CFG_NVRAM_SIZE"
+       depends on CONFIG_SUTIL 
+       default 550
+
+config CONFIG_FIREWALL_NUMBER
+       string "CFG_FIREWALL_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_MAC_FILTER_NUMBER
+       string "CFG_MAC_FILTER_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_APPLICATION_NUMBER
+       string "CFG_APPLICATION_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_PORT_FORWARD_NUMBER
+       string "CFG_PORT_FORWARD_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_VIRTUAL_SERVER_NUMBER
+       string "CFG_VIRTUAL_SERVER_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_URL_FILTER_NUMBER
+       string "CFG_URL_FILTER_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_SCHEDULE_NUMBER
+       string "CFG_SCHEDULE_NUMBER"
+       depends on CONFIG_SUTIL
+       default 10
+
+config CONFIG_STATIC_ROUTE_NUMBER
+       string "CFG_STATIC_ROUTE_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_BLOCK_SERVICE_NUMBER
+       string "CFG_BLOCK_SERVICE_NUMBER"
+       depends on CONFIG_SUTIL
+       default 10
+
+config CONFIG_TRUST_IP_NUMBER
+       string "CFG_TRUST_IP_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_DHCPD_RESERVATION_NUMBER
+       string "CFG_DHCPD_RESERVATION_NUMBER"
+       depends on CONFIG_SUTIL
+       default 25
+
+config CONFIG_MULTIPLE_ROUTING_NUMBER
+       string "CFG_MULTIPLE_ROUTING_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_QOS_NUMBER
+       string "CFG_QOS_NUMBER"
+       depends on CONFIG_SUTIL
+       default 20
+
+config CONFIG_INBOUND_FILTER_NUMBER
+       string "CFG_INBOUND_FILTER_NUMBER"
+       depends on CONFIG_SUTIL
+       default 24
+
+config CONFIG_ACCESS_CONTROL_NUMBER
+       string "CFG_ACCESS_CONTROL_NUMBER"
+       depends on CONFIG_SUTIL
+       default 15
+
+config CONFIG_SRC_MACHINE_NUMBER
+       string "CFG_SRC_MACHINE_NUMBER"
+       depends on CONFIG_SUTIL
+       default 8
+
+config CONFIG_IP_CONNTRACK_NUMBER
+       string "CFG_IP_CONNTRACK_NUMBER"
+       depends on CONFIG_SUTIL
+       default 4096      
+
+config CONFIG_UPLOAD_TIME
+       string "CFG_UPLOAD_TIME"
+       depends on CONFIG_SUTIL
+       default 120
+
+config CONFIG_REBOOT_TIME
+       string "CFG_REBOOT_TIME"
+       depends on CONFIG_SUTIL
+       default 60
+
+config CONFIG_RESTORE_TIME
+       string "CFG_RESTORE_TIME"
+       depends on CONFIG_SUTIL
+       default 70
+
+config CONFIG_RESTORE_WIRELESS_TIME
+       string "CFG_RESTORE_WIRELESS_TIME"
+       depends on CONFIG_SUTIL
+       default 30
+
+config CONFIG_RESET_TIME
+       string "CFG_RESET_TIME"
+       depends on CONFIG_SUTIL
+       default 3
+
+config CONFIG_UPLOAD_CERTIFICATION_TIME
+       string "CFG_UPLOAD_CERTIFICATION_TIME"
+       depends on CONFIG_SUTIL
+       default 3
+
+config CONFIG_LAN_IP_CHANGE_REBOOT_TIME
+       string "CFG_LAN_IP_CHANGE_REBOOT_TIME"
+       depends on CONFIG_SUTIL
+       default 60
+
+config CONFIG_SUPER_G_REBOOT_TIME
+       string "CFG_SUPER_G_REBOOT_TIME"
+       depends on CONFIG_SUTIL
+       default 70
+
+config CONFIG_UPGRADE_TIME
+       string "CFG_UPGRADE_TIME"
+       depends on CONFIG_SUTIL
+       default 120
+choice
+		 prompt "Flash Type"
+		 default CONFIG_FLASH_INTEL_28F640
+
+		 config CONFIG_FLASH_INTEL_28F640
+		 bool "Intel 8M 28F640"
+
+		 config CONFIG_FLASH_MXIC_29LV640TB
+		 bool "MXIC 8M 29LV640TB"
+
+endchoice
+
+config CONFIG_CLI
+	bool "cli commands"
+	default n
+	help
+	commands set. for replace RC.
+
+config CONFIG_BUSYBOX_1_6_1
+	bool "busybox-1.6.1 revsion for CAMEO"
+	default n
+	help
+	Modified for built-in dnsmasq, add https support, ssi/ssc style
+		of thttpd compatible, 2 account such as httpd and sslvpn user
+		support. chcklist support by urlmap options.
+
+config CONFIG_LINUX_NVRAM
+	bool "linux nvram"
+	default n
+	help
+	nvram application and device module that base on broadcom style.
+endmenu
+
+menu "Application Options"
+
+config CONFIG_HTTPD
+       bool "Web server"
+#       depends on CONFIG_NVRAM && CONFIG_SHARED
+       default y
+       help
+       Answer Y for basic web configuration support.
+
+config CONFIG_HTTPD_PURE
+       bool "HNAP -- Pure Network"
+       depends on CONFIG_HTTPD 
+       default n
+       help
+       Answer Y for pure network support.
+
+config CONFIG_IPV6_LLMNR
+	bool "IPv6 LLMNR"
+	default n
+	help
+	Link Local Multicast Name Resolution
+
+config HTTPD_DENY_USERID
+       bool "allow login as admin  only"
+       depends on CONFIG_HTTPD
+       default n
+       help
+       Answer Y for allowing login as admin or N for allowing login as admin/user.
+       
+config HTTPD_USED_SP_ADMINID
+       bool "allow login as the spcial admin and used the MAC as the password"
+       depends on CONFIG_HTTPD
+       default n
+       help
+       Answer Y for allowing login as the spcial admin and used the MAC as the password.       
+       
+config HTTPD_USED_MUTIL_AUTH
+       bool "support mutil user login by MAC address"
+       depends on CONFIG_HTTPD
+       default n
+       help
+       Answer Y for support mutil user login by MAC address.             
+
+config HTTPD_LOGOUT_ADMIN_CHANGED
+       bool "logout while admin info be changed"
+       depends on CONFIG_HTTPD
+       default n
+       help
+       Answer Y for logout constraintly while admin name/password be changed or N for current user in this session.
+
+config CONFIG_PPPD
+       bool "PPPD"
+       default y
+
+config CONFIG_MULTIPLE_PPPoE
+       bool "CFG_MULTIPLE_PPPOE"
+       depends on CONFIG_PPPD
+       default n
+       help
+       Answer Y for multiple pppoe support(max session = 5). Please also turn on PPPoE client, LLTD and IP.
+
+config CONFIG_RUSSIA_PPPoE
+       bool "CFG_RUSSIA_PPPOE"
+       depends on CONFIG_PPPD
+       default n
+       help
+       Answer Y for russia pppoe support.
+
+config CONFIG_RP_PPPoE
+       bool "PPPoE client"
+       default y
+
+config CONFIG_UPNP
+       bool "UPnP IGD server"
+       default y
+
+config CONFIG_UUID
+	    bool "UUID generator"
+        depends on CONFIG_UPNP
+		default n
+	
+choice
+		prompt "UPNP_SOLUTION"
+		default CONFIG_UPNP_ATH
+		depends on CONFIG_UPNP
+                 
+		config CONFIG_UPNP_ATH
+		default CONFIG_UPNP_ATH_MINIUPNPD_RC
+		bool "Atheros UPNP"
+		
+		config CONFIG_UPNP_ATH_MINIUPNPD_RC
+		bool "CFG_MINIUPNPD_RC"
+		depends on CONFIG_UPNP_ATH
+		default n
+
+		config CONFIG_UPNP_ATH_MINIUPNPD_1_3
+		bool "CFG_MINIUPNPD_1_3"
+		depends on CONFIG_UPNP_ATH
+		default n
+
+			config CONFIG_UPNP_ATH_MINIUPNPD_1_3_LEASE_FILES
+			bool "CONFIG_UPNP_ATH_MINIUPNPD_1_3_LEASE_FILES"
+			depends on CONFIG_UPNP_ATH_MINIUPNPD_1_3
+			default n
+			help
+				The features that PortMapping rules would be saved to files
+
+		config CONFIG_UPNP_ATH_MINIUPNPD
+		bool "CFG_MINIUPNPD"
+		depends on CONFIG_UPNP_ATH
+		default n
+		
+		config CONFIG_UPNP_ATH_LIBUPNP
+		bool "CFG_LIBUPNP"
+		depends on CONFIG_UPNP_ATH
+		default n
+		
+		config CONFIG_UPNP_ATH_LIBUPNP_SAVE2FILE
+		bool "CFG_UPNP_ATH_LIBUPNP_SAVE2FILE"
+		depends on CONFIG_UPNP_ATH_LIBUPNP
+		default n
+		help
+			Save Upnp AddPortMapping rules to files
+
+		config CONFIG_UPNP_ATH_LIBUPNP_CHECK_NVRAM
+		bool "CFG_UPNP_ATH_LIBUPNP_CHECK_NVRAM"
+		depends on CONFIG_UPNP_ATH_LIBUPNP
+		default n
+		help
+			When Upnp client invoke AddPortMapping, check
+			if the rule is conflict with the virtual server
+			rules added in nvram via WEB UI
+
+		config CONFIG_UPNP_BCM
+		bool "Broadcom UPNP"
+
+		config CONFIG_UPNP_MVL
+		bool "Marvell UPNP"
+		 help
+			Please also turn on the feature of Web server.
+endchoice
+
+config CONFIG_NTP
+       bool "NTP client"
+       default y
+
+config CONFIG_DNSMASQ
+       bool "DNSMasq -- DNS forwarder"
+       default y
+
+config CONFIG_OPENDNS
+		bool "OPENDNS support"
+		depends on CONFIG_DNSMASQ
+		default n
+		help
+		Answer Y for opendns support, implement in apps/dnsmasq-2.41.
+
+config CONFIG_DDNS
+       bool "Dynamic DNS (DDNS)"
+       default y
+
+config CONFIG_DDNS_TIME_INTERVAL
+       bool "CFG_DDNS_TIME_INTERVAL"
+       depends on CONFIG_DDNS
+       default n
+       help
+       Answer Y for time interval support of DDNS.
+
+config CONFIG_WCN
+       bool "Windows Connect Now support (WCN)"
+       default n
+       help
+       Answer Y to enable support for Windows Connect Now - a method
+	   to configure wireless networks via USB Flash Devices.
+	   (Requires CONFIG_WCN and dependents be configured into the kernel.)
+
+config CONFIG_3G_USB_CLIENT
+       bool "3G USB Client"
+       default n	
+       help
+       Answer Y to enable support for 3G USB Client
+       you can use 3G USB Adapter to Internet  
+
+config CONFIG_NETWORK_USB
+       bool "NetWork USB (SharePort) Utiltiy"
+       default n
+       help
+       Answer Y to enable support for NetWork USB Utiltiy (SharePort Utility)
+       you can select Kcodes or Silex
+
+choice
+		prompt "NetWork USB Utiltiy"
+		default CONFIG_KCODES
+		depends on CONFIG_NETWORK_USB
+		
+		config CONFIG_KCODES
+		bool "Kcodes"
+		depends on CONFIG_NETWORK_USB
+		default y
+		
+		config CONFIG_SILEX
+		bool "Silex"
+		depends on CONFIG_NETWORK_USB
+		default n
+endchoice
+
+config CONFIG_SMTP
+       bool "Send Logs by E-Mail"
+       default n
+       help
+       Answer Y to enable support for sending logs by E-mail
+
+config CONFIG_MAILOS
+       bool "Mail On Schedule Daemon"
+       depends on CONFIG_SMTP
+       default n
+       help
+       Answer Y to enable support for sending logs on schedule by E-mail
+
+config CONFIG_WAKE_ON_LAN
+       bool "Wake On LAN Proxy"
+       default n
+       help
+       Answer Y to enable support for device as Wake On LAN Proxy Server
+
+config CONFIG_IPTABLES
+ 		 bool "Iptables support -- Firewall"
+		 default y
+
+config CONFIG_NAT_ENABLE
+       bool "NAT Support"
+       default y
+       
+config CONFIG_HW_NAT
+       bool "HW NAT Support"
+       default n
+
+config CONFIG_SPI
+       bool "SPI"
+       default n
+
+config CONFIG_ACCESS_CONTROL
+       bool "Access control"
+       default n
+
+config CONFIG_PORT_FORWARD_BOTH
+       bool "Port Forward Both TCP and UDP"
+       default n
+
+config CONFIG_PORT_FORWARD_TO_LOG
+       bool "Port Forward rule show to syslog"
+       default n
+
+config CONFIG_INBOUND_FILTER
+       bool "Inbound Filter"
+       default n
+
+config CONFIG_DHCP_RELAY
+	bool "DHCP Relay Agent"
+	default n
+	help
+		This program forwards DHCP messages between subnets 
+		with different sublayer broadcast domains. 
+		It is similarly to the DHCP relay agent dhcrelay of
+		ISC's DHCP, but has the following features which are important:
+		    * Runs as non-root in a chroot-jail
+			* Uses "normal" AF_INET sockets; this allows to uses packetfilters
+				to filter incoming messages.
+			* The DHCP agent IDs can be defined freely
+			* Has a small memory footprint when using dietlibc
+				(if dietlibc feature is enbaled)
+			
+			It tries to be RFC 2131/2132 and 3046 compliant.
+			Probably it works with BOOTP (RFC 951) also, but
+			since the handling of the giaddr field is described
+			misleading (see RFC 1542), there may occur problems.
+
+		Reference: http://www.nongnu.org/dhcp-fwd/
+
+config CONFIG_UDHCP
+		 bool "DHCP server & client"
+		 default y
+
+config CONFIG_UDHCPD_NETBIOS
+       bool "CFG_DHCPD_NETBIOS"
+       depends on CONFIG_UDHCP
+       default n
+       help
+       Answer Y for netbios support of udhcpd.
+
+config CONFIG_UDHCPD_ALWAYS_BROADCAST
+       bool "CFG_DHCPD_ALWAYS_BROADCAST"
+       depends on CONFIG_UDHCP
+       default n
+       help
+       Answer Y for always broadcast support of udhcpd.
+
+config CONFIG_UDHCPD_REVOKE
+       bool "CFG_DHCPD_REVOKE"
+       depends on CONFIG_UDHCP
+       default n
+       help
+       Answer Y for revoke support of udhcpd. Clean up client IP cache in dhcpd.
+
+config CONFIG_UDHCPC_UNICAST
+       bool "CFG_DHCPC_UNICAST"
+       depends on CONFIG_UDHCP
+       default n
+       help
+       Answer Y for unicast support of udhcpc.
+
+config CONFIG_UDHCPC_STATIC_ROUTE
+	bool "CFG_UDHCPC_STATIC_ROUTE"
+	depends on CONFIG_UDHCP
+	default n
+	help
+		This enables support for dhcp static route (option 33)
+		in dhcp client (RFC 2132), to let udhcpc request server with
+		option 33, and handdle following response, answer Y for
+		static route of udhcpc.
+
+config CONFIG_UDHCPC_CLASSLESS_STATIC_ROUTE
+	bool "CFG_UDHCPC_CLASSLESS_STATIC_ROUTE"
+	depends on CONFIG_UDHCP
+	default n
+	help
+		This enables support for dhcp classes static route (option 121)
+		in dhcp client (RFC 3442), to let udhcpc request server with
+		option 121, and handdle following response, answer Y for
+		classes static route of udhcpc.
+
+choice
+	prompt "DHCP Client Classless Static Route"
+	default CFG_RFC_UDHCPC_CLASSLESS_STATIC_ROUTE
+	depends on CONFIG_UDHCPC_CLASSLESS_STATIC_ROUTE
+		 
+	config CONFIG_RFC_UDHCPC_CLASSLESS_STATIC_ROUTE
+	bool "CFG_RFC_UDHCPC_CLASSLESS_STATIC_ROUTE"
+	depends on CONFIG_UDHCPC_CLASSLESS_STATIC_ROUTE
+	default y
+	help
+		This enables support for dhcp Classless Static Route (option 121)
+		in dhcp client (RFC 3442), to let udhcpc request server with
+		option 121, and handdle following response, answer Y for
+		static route of udhcpc.
+
+	config CONFIG_MS_UDHCPC_CLASSLESS_STATIC_ROUTE
+       	bool "CFG_MS_UDHCPC_CLASSLESS_STATIC_ROUTE"
+	depends on CONFIG_UDHCPC_CLASSLESS_STATIC_ROUTE
+	default n
+	help
+		This enables support for dhcp Classless Static Route (option 249)
+		in dhcp client (RFC 3442), to let udhcpc request server with
+		option 249, and handdle following response, answer Y for
+		static route of udhcpc. Only Microsoft use this number instead of 121.
+endchoice
+
+config CONFIG_AUTO_MODE_SELECT
+	bool "CONFIG_AUTO_MODE_SELECT"
+	depends on CONFIG_UDHCP
+	default n
+	help
+		This enables support for router auto mode select function in dhcp client.
+
+config IGNORE_IP_CONTRAST
+    bool "IGNORE_IP_CONTRAST"
+    default n
+    depends on CONFIG_UDHCP
+    help
+    This is one of the udhcpc recall rc condition when it get IP.
+    Note: If you enabled this option, no matter dhcpc's new IP equal old IP, do rc restart (filter). Otherwise, the static_routing rules would not add to routing table.
+
+config CONFIG_TFTPD
+		 bool "TFTP server"
+		 default y
+
+config CONFIG_GPIO
+	 	bool "GPIO"
+		default y
+
+config CONFIG_MFORWARD
+		 bool "Multicast Forwarding"
+		 default y
+config CONFIG_SUPPORT_PRIVACY_ADDRESS 
+       bool "CFG_SUPPORT_PRIVACY_ADDRESS"
+       depends on CONFIG_MFORWARD
+       default n
+       help
+       Answer Y for privacy multi-cast address(239.xxx.xxx.xxx) support.
+
+config CONFIG_SUPPORT_BIND
+	bool "CFG_SUPPORT_BIND"
+	depends on CONFIG_MFORWARD
+	default n
+	help
+	Answer Y for socket bind support.Because It does not work on Python solution with connect().
+	
+config CONFIG_BIGPOND
+	 	bool "Bigpond"
+		default y
+
+config CONFIG_PPTP_CLIENT
+	 	bool "PPTP - accel-pptp 0.7.12"
+		default y
+
+config CONFIG_PPTP_CLIENT_V082
+		bool "PPTP - accel-pptp 0.8.2"
+		default n
+
+config CONFIG_L2TP_CLIENT
+	 	bool "L2TP"
+		default y
+
+config CONFIG_LLD2D
+	 	bool "LLTD"
+		default y
+
+config CONFIG_SNMP
+		bool "SNMP"
+		default n
+		
+config CONFIG_SNMP_TRAP
+		bool "SNMP Trap"
+		depends on CONFIG_SNMP
+		default n
+		help
+		support snmp trap
+
+config CONFIG_NMBD
+		bool "NMBD for NETBIOS"
+		default y
+
+config CONFIG_PCIUTILS
+		bool "pciutils"
+		default n
+
+config CONFIG_ZEBRA
+		bool "Zebra -- Routing tool"
+		default n
+
+config CONFIG_OPENSSL
+		bool "Openssl"
+		default n
+
+config CONFIG_HTTPS
+       bool "HTTP Secure"
+       depends on CONFIG_OPENSSL
+       default n
+       help
+       Answer Y for http secure support.
+
+config CONFIG_OPENAGENT
+       bool "TR-069 CPE protocol"
+       depends on CONFIG_OPENSSL
+       default n
+       help
+       Answer Y for TR-069 support.
+
+config CONFIG_ZLIB
+		bool "Zlib"
+		default n
+
+config CONFIG_DROPBEAR
+	bool "Dropber SSH Server"
+       depends on CONFIG_ZLIB
+	default n
+	help
+	Answer Y for lightweight SSH server support.
+
+config CONFIG_WPASUPPLICANT
+		bool "Wpa Supplicant"
+		default n
+		
+config CONFIG_WPS
+		bool "WPS"
+		default y
+
+config CONFIG_WPS_PIN_GENERATE
+        bool "WPS PIN generate function supported"
+		depends on CONFIG_WPS
+        default n
+		help
+		WPS PIN generate function supported in sutil.so.
+
+config CONFIG_HOSTAPD
+		bool "HOSTAPD"
+		depends on CONFIG_WPS
+		default y
+
+config CONFIG_SUPPLICANT_ATH
+                bool "Wpa supplicant for Atheros"
+                depends on CONFIG_WPS
+                default y
+		help
+		This daemon only supports Atheros solution.
+
+config CONFIG_WAN_8021X
+                bool "Wpa supplicant for wired (WAN) 802.1x Support"
+                depends on CONFIG_SUPPLICANT_ATH
+                default n
+		help
+		This Config current only supports Atheros solution because dependence on CONFIG_SUPPLICANT_ATH.
+
+config CONFIG_WPS_WPATALK
+                bool "WPS for Atheros AP94"
+                depends on CONFIG_WPS
+                default n
+		help
+		Supports Atheros AP94 WPS solution. 
+		AP94 support 2.4GHz and 5GHz concurrent mode
+
+config CONFIG_IP
+		bool "IPROUTE2 -- iproute2 package"
+		default y
+
+config IPROUTE2_IP
+		bool "IP -- iproute2 package"
+		depends on CONFIG_IP
+		default y
+		
+config CONFIG_TC
+		bool "TC (Traffic Control) -- iproute2 package"
+		depends on CONFIG_IP
+		default y
+		
+config CONFIG_TRACEGW
+		bool "TRACEGW -- for traceroute"
+		depends on CONFIG_TC
+		default y		
+
+config CONFIG_MBANDWIDTH
+		bool "MBANDWIDTH -- for measuring bandwidth"
+		depends on CONFIG_TC && CONFIG_TRACEGW
+		default y
+
+config CONFIG_IPV6_SUPPORT
+		bool "IPv6 support"
+		default n
+		help
+		Answer Y to support IPv6.
+
+config CONFIG_IPV6_STATIC
+		bool "IPv6: support static IPv6"
+		depends on CONFIG_IPV6_SUPPORT
+		default y
+		help
+		Answer Y to support static IPv6.
+
+config CONFIG_IPV6_DHCP
+		bool "IPv6: support DHCPv6 server & client"
+		depends on CONFIG_IPV6_SUPPORT
+		default y
+		help
+
+config CONFIG_RADVD
+		bool "Radvd  -- IPv6 tool"
+		depends on CONFIG_IPV6_SUPPORT
+		default y
+
+config CONFIG_MIREDO
+		bool "Miredo -- Teredo: Tunneling IPv6 over UDP through NATs"
+		depends on CONFIG_IPV6_SUPPORT
+		default n
+
+config CONFIG_MRD
+		bool "MRD -- IPv6 Multicast routing Daemon: support MLD v1 & v2"
+		depends on CONFIG_IPV6_SUPPORT
+		default n
+
+config CONFIG_IPV6_TUNNEL
+		bool "IPv6: support tunnel"
+		depends on CONFIG_IPV6_SUPPORT
+		default y
+
+config CONFIG_6TO4_TUNNEL
+		bool "IPv6: support 6to4 tunnel"
+		depends on CONFIG_IPV6_TUNNEL
+		default y
+		help
+		Answer Y for 6to4 tunnel support of IPv6.
+
+config CONFIG_6IN4_TUNNEL
+		bool "IPv6: support 6in4 tunnel"
+		depends on CONFIG_IPV6_TUNNEL
+		default y
+		help 
+		This "IPv6 in IPv4 tunnel" is so-called Tunnel broker 
+
+config CONFIG_STATELESS_WAN
+		bool "IPv6: support stateless autoconfiguration WAN"
+		depends on CONFIG_IPV6_SUPPORT
+		default n
+		help
+		The function would make router's wan interface accept ra
+
+config CONFIG_IPV6_CLIENT_LIST
+                bool "IPv6: support monitor ipv6 clients in LAN side"
+                depends on CONFIG_IPV6_SUPPORT
+                default n
+                help
+                The function is used ipv6 nd mechanism to implement.
+
+config CONFIG_WISH
+		bool "WISH for Wireless QoS"		
+		default y
+
+config DLINK_SPEC
+		bool "DLINK Spec."
+		default y
+		
+config CONFIG_DCC
+		bool "DCC -- D-Link Click'n Connect"
+		depends on DLINK_SPEC
+		default y
+
+config CONFIG_OWERA
+		bool "OWERA Support "
+		depends on DLINK_SPEC
+		default n
+			
+config CONFIG_DLINK_ROUTER_LED_DEFINE
+		bool "DLINK LED DEFINE"
+		depends on DLINK_SPEC
+		default y
+		
+config CONFIG_DLINK_FW_QUERY
+		bool "DLINK Firmware Query"
+		depends on DLINK_SPEC
+		default y
+		help
+		Answer Y for Query latest FW from Dlink Server.
+
+config CONFIG_HTTP_TIMEOUT
+       bool "HTTP-Re-Login support when login timeout"
+       depends on DLINK_SPEC
+       default y
+       help
+       Answer Y for httpd timeout to login page support.
+
+config CONFIG_XML_AGENT
+		bool "XML_AGENT for Widget(Gadget)"
+		depends on DLINK_SPEC
+		default y
+		help
+		Answer Y for Support DLink Widget or Gadget.
+
+config CONFIG_SHOW_CHECKSUM
+       bool "Checksum feature support"
+       default y
+					
+config CONFIG_AJAX
+       bool "ajax feature support"
+       default y	
+       
+config CONFIG_AUTHGRAPH
+       bool "AuthGraph feature support"
+       default y
+       
+config CONFIG_SHOW_HW_VERSION
+       bool "chklist show hwversion support"
+       default y     
+       
+config CONFIG_CROWDCONTROL
+       bool "Crowd Control HTTP Proxy support"
+       default n                				
+
+config CONFIG_IP_LOOKUP
+       bool "look up lan pc hostname and ip support"
+       default n	   
+       
+config CONFIG_HEARTBEAT
+       bool "heartbeat feature support"
+       default n	         
+
+config CONFIG_LCM_FEATURE_INFOD
+		bool "lcm feature support infod"
+		default n
+       
+config CONFIG_PPP_USED_CHAT
+       bool "ppp used chat support"
+       default n          				
+source config/Config.vpn
+endmenu
+
+
+menu "Tools"
+
+config CONFIG_BRCTL
+		 bool "Bridge Utilities"
+		 default n 
+		 help
+		 bridge utilities
+
+config CONFIG_VLAN
+		 bool "VLAN tool"
+		 default n
+		 help
+		 VLAN tool
+
+config CONFIG_HEADER
+		bool "Header tool"
+		default n
+		help
+		header tool
+
+endmenu
+
+menu "Web Pages"
+
+config CONFIG_WWW
+       bool "HTML pages"
+		 default y
+
+config CONFIG_TEST_PAGE
+		 bool "Test pages"
+		 default n
+
+config CONFIG_IPv6_TEST_FUNCTION
+                bool "support IPv6 test function for CHT"
+                depends on CONFIG_TEST_PAGE
+                default n
+                help
+                Answer Y for supporting IPv6 test function for CHT.
+endmenu
+
+
+

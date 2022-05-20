@@ -1,0 +1,331 @@
+2008-02-18
+		=> test 40, 100, sometimes failed
+		=> Tests need to do before release, 
+			=> upnp full test
+				=> 40, 100 sometimes failed
+					=> it's because around that time, dhcpc just happen to renew
+						then will call rc to flush iptables...
+			=> Intel device spy
+			=> XBoX, 2NIC tools	
+				=> UPnP Negotiation, passed
+				=> 24 Hour not run
+			=> when booting, upnpd will be started whatever wan ip is obtained or not
+				=> WAN connected, no ip, passed
+				=> WAN connected, has ip, passed (and will not be restarted)
+				=> WAN disconnected, no ip, passed
+			=> when wan ip has changed, upnpd will not be restarted
+				=> changed wire line, passed
+				=> no changed wire line, wait release, passed
+			=> when wan wire line is disconnected, upnpd will not be restarted
+				=> passed
+			=> when wan wire line is disconnected then connect, upnpd will not be restarted
+				=> passed
+			=> when lan networking is changed, upnpd will restart
+				=> passed
+			=> when lan networking is changed, upnpd will restart, then get new correct lan ip
+				in gatedesc.xml
+				=> passed
+			=> when rebooting , upnpd will be killed
+				=> passed
+			=> when firmware upgrading, upnpd will be killed
+				=> passed
+			=> when disable UPnP, upnpd will be stoped
+				=> passed
+			=> when enable UPnP, upnpd will be started
+				=> passed
+			=> when disable WPS, upnpd will be stoped
+				=> failed
+					=>in linuxigd-1.0/main.c, mod_xml_conf() has duplicated 
+						system("cp -raf /etc/linuxigd/* /var/etc/");...
+					=> now mark that line and fixed it in mod_upnpd_xml.sh
+			=> when enable WPS, upnpd will be stoped
+			=> in Vista, (system service, windows conenct now restart), the WPS logo appears
+			=> Intergrate to CVS
+
+2008-02-15
+		=> Integrate with latest environment
+			=> upnpd can be executed on booting
+			=> upnp test pattern 40 still unstable (pass/fail)
+			=> upnp test pattern 40 still unstable (pass/fail)
+			=> upnp test pattern 203 failed (the later test also)
+				seems it's because dhcpc does not ask IP in the situation
+				1. Physical wire line is connected on WAN
+				2. dhcpd server on WAN corginally exists, but will disappear
+					then execute again
+				3. once the dhcpd server disappear in the sequence discribed at
+					point 2, dhcpc seems not continueously try to asking IP
+				==> app/rc/wantimer.c,line 397, should marked dhcpc_release(); need to commit to CVS
+		=> Integrate UPnP Enable/Disable
+		=> advertisements period = 30, in main.c line 256, did not read from nvram
+		=> advertisement_ttl = 4, in upnp/src/ssdp/ssdp_device.c, line 219, did not read from nvram
+		=> httpd/core.c, when firmware upgrade, need to kill upnpd (_system("killall miniupnpd");)
+			 need to commit to CVS
+		=> apps/rc/app.c, when turn on/off wps, stop_upnpd
+			 need to commit to CVS
+		=> apps/rc/app.c, when turn on/off upnp, stop_upnpd
+			 need to commit to CVS
+		=> the job mod_xml_conf() in linuxigd-1.0/main.c, already move 
+			to rc/app.c, and more complete,	but I still keep it there 
+			in case some unpredictable actions from rc, 
+			and we need to care if we change the path of gatedesc.xml
+		=> full upnp test passed in the first run
+		=> clean uncessary codes in each Makefile, => compile without error
+
+2008-02-14
+		=> running loop mode with SSDP related test, 1,2,3,10,12,20, to verify
+			if the issue happened on 0213 is due to these functions
+			=> after 125 rounds (2 hr 38 mins), all pass without any error
+		=> running loop mode with test, 25,30,31,32,35,36,40,41,45,50, to verify
+			=> after 1 round, 7.5min, upnpd crashed
+	=> upnp test 32
+		=> sometimes when rc restart, it will reset time, and will 
+			cause this test pattern failed (uptime, in upnpapi.c)
+	=> when booting, system time will set twice; in first time, upnpd will be started
+		but int second time, upnpd will not be restarted, so when cdrouter test pattern 32
+		ask uptime of our router, the value is incorrect
+		so i suggest test pattern 32 should not be testd alone (cause cdrouter nned router to reboot first)
+	=> continuously removeing useless / debug code
+		=> upnp/src/gena/gena_device.c, compiled without error
+		=> upnp/src/gena/gena_callback2, compiled without error
+		=> upnp/src/ssdp/ssdp_server.c, compiled without error
+		=> upnp/src/genlib/miniserver/miniserver.c, compiled without error
+		=> upnp/src/ssdp/ssdp_device.c, compiled without error
+		=> upnp/sample/linuxigd-1.0/etc/upnpd.conf
+		=> upnp/sample/linuxigd-1.0/pmlist.c, compiled without error
+		=> upnp/sample/linuxigd-1.0/gatedevice.h
+		=> upnp/sample/linuxigd-1.0/gatedevice.c, compiled without error
+
+
+		=> move upnpd_alive() from rc/app.c to upnp/sample/linuxigd-1.0/main.c
+			add mod_xml_conf() to main.c
+		=> modified 192.168.0.1 to 192.168.100.1 to make sure when rebooting,
+			mod_xml_conf() really works
+		=> I need to modify rc/app.c with upnpd, (inside start_upnp())
+			_system("miniupnpd &");  => _system("upnpd &");
+			and 
+			stop_upnp(), mark related codes
+		=> I need to modify apps/Makefile
+		=> wps enable !!??
+			=> when wps disable, need to remove the service description in gatedesc.xml
+				then restart upnpd
+			=> when wps enable, need to add the service description in gatedesc.xml
+				then restart upnpd
+		=> how to control upnpd start / stop !!??
+			=> stop_upnp(), start_upnp() in rc/app.c
+
+	=> start to intergrate
+		=> rc/app.c
+			=> _system("miniupnpd &");  => _system("upnpd &");
+		=> apps/Makefile
+
+2008-02-13
+	=> upnp_test_2, now it can igore the SSDP from WAN
+	=> upnp_test_41, sometimes will failed
+		=> it's because after upnpd adding iptables rules, and before sending packet 
+			to verify DIR-615, 
+			udhcpc happens to send dhcp request and receives ack
+			then udhcpc will ask rc to runs, and it will flush iptables rules
+		=> try to modified apps/udhcpc/dhcpc.c
+				main(), when in RENEW_REQUESTED state , check if IP changes,
+				add new varible to record latest valid IP (previous_ip)
+	=> for config and xml files, refer to globals.h (default value) 
+		and etc/upnpd.conf (run time checked)
+	=> for debug log file path, refer to upnp/src/api/upnpdebug.c
+	=> start to remove useless / debug code
+		=> upnp/src/soap/soap_device.c , compiled without error
+		=> upnp/src/api/upnpdebug.c , compiled without error
+		=> upnp/src/api/upnpapi.c , compiled without error
+		=> upnp/src/genlib/net/http/httppaser.c , compiled without error
+		=> upnp/src/genlib/net/service_table/service_table.c , compiled without error
+		=> upnp/sample/linuigd-1.0/util.c , compiled without error
+		=> upnp/sample/linuigd-1.0/pmlist.c , compiled without error
+		=> upnp/sample/linuigd-1.0/main.c , compiled without error
+		=> upnp/sample/linuigd-1.0/gatedevice.c , compiled without error
+		=> upnp/src/gena/gena_ctrlpt.c , compiled without error
+	=> when run full test in infinite mode, upnpd crashed after about 2~3 rounds (1 hr)
+		=> running loop mode with upnp_test_40_41, Add/Delete PortForwarding, to verify
+			if this issue is due to this function
+			=>after 71x times (8.x hrs),it occurs the first failure, and upnpd still alive
+		
+
+2008-02-12
+	=>upnpapi.c, UpnpInit() will call RunMiniServer()
+		=>RunMiniServer() will call get_ssdp_sockets()
+		=> miniserver.c
+			=> RunMiniServer(), will receive ssdp socket, then call readFromSSDPSocket()
+				=> readFromSSDPSocket() then TPJobInit( &job, ( start_routine )ssdp_event_handler_thread, data );
+					=>ssdp_server.c , ssdp_event_handler_thread() will call ssdp_handle_device_request()
+						=> ssdp_device.c, ssdp_handle_device_request() doesn't check the interface
+		=> upnpapi.c
+			=> UpnpInit(), will get LOCAL_HOST
+		=> ssdp_server.c
+			=> get_ssdp_sockets(), will set socketopt then bind (also multicast address)
+			=> try to change 
+				ssdpAddr.sin_addr.s_addr = htonl( INADDR_ANY );
+				to
+				ssdpAddr.sin_addr.s_addr = inet_addr(LOCAL_HOST);
+			=> add is_packet_from_lan() and be_swap_to_le_32() to check if SSDP from lan
+				be_swap_to_le_32() is used to convert big endian to little endian
+
+2008-02-04
+		reboot DIR615 try again with only one time upnp_test
+			=> cdrouter_upnp_2 failed 
+				=> Verify UPnP router doesn't respond to SSDP Discovery requests on WAN
+			=> we should not restart upnpd in the case when WAN acquire new IP
+		rc/app.c
+			=> in start_upnp(), add upnpd_alive(), to avoid multiple executing upnpd
+		linuxigd-1.0/util.c,
+			=> around if(!is_wanup(g_vars.extInterfaceName)) ...
+				fixed the bug when no WANIP, the IP format is incorrect, fixed it with 0.0.0.0
+				(memset(extIP,'\0',sizeof(extIP));)
+
+2008-01-31
+	=>turn off debug mode, start to fight with CDROUTER
+	=> QueryStateVarible
+	=> cdrouter test pattern 10 failed of 24 patterns
+
+		cdrouter_upnp_25        Verify router responds to UPnP QueryStateVariable for ConnectionStatus
+	        => igd didn't implement this, due to the standard see following info for detail
+	        => In book "UPnp Design by Example", p133, says "No mechanism is provided to subscribe to event messages
+	                on a per-variable"
+	        => In doc "UPnP-DeviceArchitecture-v1.0.pdf", download from UPnP forum committee , p62 says
+	                the same .
+			=> localy fixed for cdrouter, not fully fixed for "QueryStateVariable"
+				=> in gatedevice.c, in function HandleGetVarRequest(), add some code, and GetConnectionStatus()
+					to response query variable "ConnectionStatus", response value only set to NULL as Ubicom
+
+		cdrouter_upnp_36        Add/delete dynamic UPnP TCP port mapping for specific IP src address
+			=> it's flow is AddPortMapping, verify with correct enternal_ip, verify with incorrect external_ip , Delete,
+			=> igd's iptable command let's incorrect external_ip's package in so this pattern failed
+				=> in pmlist.c
+				=> pmlist_AddPortMapping (int enabled, char *protocol, char *externalPort, char *internalClient, char *internalPort)
+					this function does not has external_ip parameter ...
+				=> in doc "UPnP_IGD_WANIPConnection 1.0.pdf", has indicated RemoteHost can be used
+			=> 20080201 => pass
+		
+		cdrouter_upnp_41        Add/delete dynamic UPnP UDP port mapping for specific IP src address
+			=> 20080201 => pass, root cause is same as cdrouter_upnp_36
+
+		cdrouter_upnp_200       Verify UPnP clients can subscribe/unsubcribe to events for WANIPConnection or WANPPPConnection  log     lan                                          wan
+			=> 20080201, igd has  reply Subscribe with 200 OK, but not send Initial Notify back to cdrouter
+			=> pass, due to the same issue happened before (can't find correct UDN)
+		cdrouter_upnp_201       Verify UPnP clients can subscribe to events with infinite subscription time     log     lan wan
+			=> pass, after 200, no modification
+		cdrouter_upnp_202       Verify UPnP clients can renew NOTIFY events for WANIPConnection or WANPPPConnection
+			=> pass, after 200, no modification
+		cdrouter_upnp_203       Verify router sends UPnP NOTIFY events for ConnectionStatus
+			=> pass, after patching with nileshkemard, refer to
+				http://sourceforge.net/tracker/index.php?func=detail&aid=1600408&group_id=52728&atid=467824
+				=>but when Notify CP that WAN is disconnected, we reply a starange IP "*.f@.1.1"
+					but ubicom replay with "0.0.0.0"
+					=> fixed it in 2008-02-04
+		cdrouter_upnp_204       Verify router sends UPnP NOTIFY events with updated ExternalIPAddress
+			=> pass, after 203, no modification
+		cdrouter_upnp_210       Verify router stops sending NOTIFY events when subscription expires
+			=> pass, after 203, no modification
+		cdrouter_upnp_220       Verify the maximum number of UPnP event subscriptions that can be created
+			=> pass, after 203, no modification
+				=>but I don't find out where can define it or it's limited by system resource ?
+		
+		cdrouter_upnp_all infinite loop test
+			=> cdrouter_upnp_2 all succeed 
+			=> cdrouter_upnp_12 all succeed
+			=> cdrouter_upnp_20 all succeed
+			=> cdrouter_upnp_30 all succeed
+			=> cdrouter_upnp_31 all succeed
+			=> cdrouter_upnp_45
+			=> others didn't passed each time
+
+2008-01-29
+	=>XBOX, running Udp24Hr Test in 12:00 am passed
+	=>for memory leak, should trace malloc(), strdup(), and free(),
+	=> Trying to reproduce memor leak issue
+		=> close DEBUG=n, and running with wan connect to cameo network, lan with msn
+	=>about forking process
+		=> main.c, ExpirationTimerThreadInit() fork 2
+		=> upnpapi.c, ThreadPoolInit( &gRecvThreadPool, &attr ), fork 3
+		=> upnpapi.c, ThreadPoolInit( &gMiniServerThreadPool, &attr ), fork 2
+		=> upnpapi.c, TimerThreadInit(), fork 2
+		=> upnpapi.c, StartMiniServer(), fork 1
+		=> upnpapi.c, UpnpEnableWebserver(), fork 1
+	=> using Intel Device alidator, test Eventing, fail
+		=> SUBSCRIBE, UNSUBSCRIBE, can receive 200 OK, but can't receive EVENTs from DEVICE
+
+2008-01-28
+	=>Intel tools, AddPortingMapping test failed, seems due to incorrect xml element,
+		<NewPortMappingDescription /> without <NewPortMappingDescription>, so in gatedevice.c AddPortMapping(),
+		will take it as invalid , but In doc UPnP-DeviceArchitecture-v1.0.pdf, it's vaild for only have 
+		closing tag <actionname /> without opnening tag and content if there is 
+		no any content for actionname
+		=> modified gatedevice.c, function AddPortMapping, && => || when checking 
+			desc = GetFirstDocumentItem(ca_event->ActionRequest, "NewPortMappingDescription")
+		=> modified pmlist.c, function pmlist_NewNode(),add (desc) in if statement
+			if ((desc) && (strlen(desc) < sizeof(temp->m_PortMappingDescription))) strcpy(temp->m_PortMappingDescription, desc);
+		=>Intel DeviceSpy,
+			Add 1 portmapping	, delete 1 portmaping => Pass
+		=>XBOX, UPNP negotiate failed in client 2, due to duplicated port forward, should reject, but 
+			igd replace previous
+			=>in gatedevice.c, function AddPortMapping(),add pmlist_FindSpecific() to check if external port
+				already been assign to different IP, reject it
+		=>XBOX ,2 NIC tools, upnp negotiation => Pass
+		=>XBOX, running Udp24Hr Test in 12:00 am
+ThreadPoolInit( &gRecvThreadPool, &attr )
+
+2008-01-25
+	=> manualy patch Nek's patch for UDN issue, refer to
+		http://sourceforge.net/tracker/index.php?func=detail&aid=1511225&group_id=52728&atid=467823
+		=>linux-igd/gatedevice.c
+			=>modified StateTableInit()
+			=>modified HandleActionRequest()
+		=>linux-igd/gatedevice.h
+			=>add
+				char *defConnDevice;// = "WANConnectionDevice:1";
+				char *defConnServiceID;// = "urn:upnp-org:serviceId:WANIPConn1";
+				char *WANDeviceUDN;// = NULL;
+				char *WANConnectionUDN;// = NULL;
+				char *defConnectionService;// = NULL
+		=>Portmapping's patch isn't integrate
+		=>Intel DeviceSpy,
+			GetConnectionTypeInfo => Pass
+			GetExternalIPAddress => Pass
+	=>for service,WFAWLANConfig, not implement in code
+	=>for igd in our platform, can't modified gatedesc.xml when some info changeing (ex:external/Internal IP...)
+	=>XBox, AddPortingMapping test failed
+
+2008-01-24
+	=>in upnp/sample/linuxigd-1.o/gatedevice.c, in HandleSubscriptionReques(),
+		if (strcmp(sr_event->UDN, gateUDN) == 0), gateUDN always get the first
+		UDN in getedesc.xml, but request's UDN is the third UDN of embedded device
+		so it can't recognize UDN, so it seems it's unknow UDN, so Internal Server
+		error
+
+2008-01-23
+- Building XBOX 360 test environment
+	=> modified lan ip to 192.168.1.1 in gatedesc.xml, for test
+	=>When received SOAP to ask WANIPConn1, "Internal Server Error" occured
+		due to mismatch quote (")
+		=>in upnp/src/soap/soap_device.c, snprintf( ns_compare, tempSize, "\"%s", urn );
+		there is a additional character ", modified then to check both device's and
+		control's ,make sure both of them are quoted or unqouted
+
+2008-01-22
+- integrated old upnpd's gatedesc.xml
+- Error Initializing UPnP SDK on IP 192.168.0.1, return code -203
+	=> miniupnpd did not kill
+- auto get external / internal interface (nvram ? parameter from rc ?)
+- Trying to fix Xbox 360 bug
+	=> Trying to build Xbox testing tool
+	=> If want to modify the package's info in packet, refer to 
+		upnp/src/genlib/net/http/httpreadwrite.c:2335:
+
+2008-01-xx
+- Manually writing Makefile for libupnp and linuxigd
+  libupnp:porting with degug mode support, but if debug on, it seems 
+          has memory leak issue (log size too big ?)
+  linuigd:
+
+- *.bak, are the original packages's file
+- jimmy_config_log_20080117.txt and jimmy_make_log_20080117.txt are the portting log while .configure
+  with default setting on x86 pc
+
+- linux-igd 1.0 is put in libupnp-1.6.3/upnp/sample/

@@ -1,0 +1,366 @@
+<!--Param.xml for Agent-->
+<?xml version="1.0" encoding="UTF-8"?>
+<TR069 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/etc/openagent/param.xsd">
+<trf>
+    <obj name="InternetGatewayDevice" rw="0">
+        <param name="LANDeviceNumberOfEntries" rw="0" type="u" noti="1" dev_func="dev_landev_num">
+        </param>
+	    <param name="WANDeviceNumberOfEntries" rw="0" type="u" dev_func="dev_wandev_num">
+        </param>
+        <obj name="DeviceInfo" rw="0">
+			<param name="Manufacturer" rw="0" type="s" dev_func="dev_Manufacturer">      
+			</param>
+			<param name="ManufacturerOUI" rw="0" type="s" dev_func="dev_ManufacturerOUI">
+			</param>
+			<param name="ModelName" rw="0" type="s" dev_func="dev_ModelName">
+			</param>
+			<param name="Description" rw="0" type="s" dev_func="dev_Description">
+			</param>
+			<param name="SerialNumber" rw="0" type="s" dev_func="dev_SerialNumber">
+			</param>
+			<param name="HardwareVersion" rw="0" type="s" dev_func="dev_HardwareVersion">
+			</param>
+			<param name="SoftwareVersion" rw="0" type="s" noti="2" noti_rw="0" dev_func="dev_SoftwareVersion">
+			</param>
+			<param name="SpecVersion" rw="0" type="s" dev_func="dev_SpecVersion">
+			</param>
+			<param name="ProvisioningCode" rw="0" type="s" noti="2" noti_rw="0" dev_func="dev_ProvisioningCode">
+			</param>
+			<param name="UpTime" rw="0" type="s" dev_func="dev_UpTime">
+			</param>
+			<param name="DeviceLog" rw="0" type="s" dev_func="dev_DeviceLog">
+			</param>
+		</obj>
+		<obj name="ManagementServer" rw="0">
+			<param name="URL" rw="2" type="s" dev_func="dev_ManageServer_URL">
+			</param>
+			<param name="Username" rw="1" type="s" dev_func="dev_ManageServer_Username">
+			</param>
+			<param name="Password" rw="2" type="s" dev_func="dev_ManageServer_Password">
+			</param>
+			<param name="PeriodicInformEnable" rw="2" type="b" dev_func="dev_ManageServer_PeriodicInformEnable">
+			</param>
+			<param name="PeriodicInformInterval" rw="2" type="u" dev_func="dev_ManageServer_PeriodicInformInterval">
+			</param>
+			<param name="PeriodicInformTime" rw="2" type="d" dev_func="dev_ManageServer_PeriodicInformTime">
+			</param>
+			<param name="ParameterKey" rw="0" type="s" dev_func="dev_ManageServer_ParameterKey">
+			</param>
+			<param name="ConnectionRequestURL" rw="0" type="s" noti="2" noti_rw="0" dev_func="dev_ManageServer_ConnectionRequestURL">
+			</param>
+			<param name="ConnectionRequestUsername" rw="2" type="s" dev_func="dev_ManageServer_ConnectionRequestUsername">
+			</param>
+			<param name="ConnectionRequestPassword" rw="1" type="s" dev_func="dev_ManageServer_ConnectionRequestPassword">
+			</param>
+			<param name="UpgradesManaged" rw="2" type="b" dev_func="dev_ManageServer_UpgradesManaged">
+			</param>
+		</obj>
+		<obj name="Layer3Forwarding" rw="0">
+			<param name="DefaultConnectionService" rw="2" type="s" dev_func="dev_Layer3_DefaultConnectionService">
+			</param>
+			<param name="ForwardNumberOfEntries" rw="0" type="u" dev_func="dev_Layer3_ForwardNumberOfEntries">
+			</param>
+			<obj name="Forwarding" rw="2" max="9" obj_dev_func="dev_obj_forward" obj_instance_func="get_forwarding_instance">
+				<obj name="0" rw="2">
+					<param name="Enable" rw="2" type="b" dev_func="dev_Forwarding_Enable">
+					</param>
+					<param name="Status" rw="0" type="s" dev_func="dev_Forwarding_Status">
+					</param>
+					<param name="Type" rw="2" type="s" dev_func="dev_Forwarding_Type">
+			        </param>
+					<param name="DestIPAddress" rw="2" type="s" dev_func="dev_Forwarding_DestIPAddress">
+					</param>
+					<param name="DestSubnetMask" rw="2" type="s" dev_func="dev_Forwarding_DestSubnetMask">
+					</param>
+					<param name="SourceIPAddress" rw="2" type="s" dev_func="dev_Forwarding_SourceIPAddress">
+			        </param>
+					<param name="SourceSubnetMask" rw="2" type="s" dev_func="dev_Forwarding_SourceSubnetMask">
+					</param>
+					<param name="GatewayIPAddress" rw="2" type="s" dev_func="dev_Forwarding_GatewayIPAddress">
+					</param>
+					<param name="Interface" rw="2" type="s" dev_func="dev_Forwarding_Interface">
+					</param>
+					<param name="ForwardingMetric" rw="2" type="i" dev_func="dev_Forwarding_ForwardingMetric">
+					</param>
+				</obj>
+			</obj>
+		</obj>
+     	<obj name="LANConfigSecurity" rw="0">
+			<param name="ConfigPassword" rw="1" type="s" dev_func="dev_LAN_ConfigPassword">
+			</param>
+		</obj>
+        <obj name="LANDevice" rw="0">	 	
+			<obj name="1" rw="0">
+				<param name="LANEthernetInterfaceNumberOfEntries" rw="0" type="u" dev_func="dev_LANDevice_Ethnum">
+				</param>
+				<param name="LANUSBInterfaceNumberOfEntries" rw="0" type="u" dev_func="dev_LANDevice_USBnum">
+				</param>
+				<param name="LANWLANConfigurationNumberOfEntries" rw="0" type="u" dev_func="dev_LANDevice_WLANnum">
+				</param>
+				<obj name="LANHostConfigManagement" rw="0">
+					<param name="DHCPServerConfigurable" rw="2" type="b" dev_func="dev_LANHost_DHCPServerConfigurable">
+					</param>
+					<param name="DHCPServerEnable" rw="2" type="b" dev_func="dev_LANHost_DHCPServerEnable">
+					</param>
+					<param name="DHCPRelay" rw="0" type="b" dev_func="dev_LANHost_DHCPRelay">
+					</param>
+					<param name="MinAddress" rw="2" type="s" dev_func="dev_LANHost_MinAddress">
+					</param>
+					<param name="MaxAddress" rw="2" type="s" dev_func="dev_LANHost_MaxAddress">
+					</param>
+					<param name="ReservedAddresses" rw="2" type="s" dev_func="dev_LANHost_ReservedAddresses">
+					</param>
+					<param name="SubnetMask" rw="2" type="s" dev_func="dev_LANHost_SubnetMask">
+					</param>
+					<param name="DNSServers" rw="2" type="s" dev_func="dev_LANHost_DNSServers">
+					</param>
+					<param name="DomainName" rw="2" type="s" dev_func="dev_LANHost_DomainName">
+					</param>
+					<param name="IPRouters" rw="2" type="s" dev_func="dev_LANHost_IPRouters">
+					</param>
+					<param name="IPInterfaceNumberOfEntries" rw="0" type="u" dev_func="dev_LANHost_IPnum">
+					</param>
+					<obj name="IPInterface" rw="2" max="3" obj_dev_func="dev_obj_IPInterface" obj_instance_func="get_ipinterface_instance">
+						<obj name="0" rw="2">
+							<param name="Enable" rw="2" type="b" dev_func="dev_LH_IPInterface_Enable">
+							</param>
+							<param name="IPInterfaceIPAddress" rw="2" type="s" dev_func="dev_LH_IPInterface_IPAddress">
+							</param> 
+							<param name="IPInterfaceSubnetMask" rw="2" type="s" dev_func="dev_LH_IPInterface_SubnetMask">
+							</param>
+							<param name="IPInterfaceAddressingType" rw="2" type="s" dev_func="dev_LH_IPInterface_AddressingType">
+							</param>
+						</obj>
+					</obj>	
+				</obj>
+			    <obj name="Hosts" rw="0">
+					<param name="HostNumberOfEntries" rw="0" type="u" dev_func="dev_LAN_Hosts_Hostnum">
+					</param>
+					<obj name="Host" rw="0">
+						<obj name="1" rw="0">
+							<param name="IPAddress" rw="0" type="s" dev_func="dev_LAN_Hosts_Host_IPAddress">
+							</param>
+							<param name="AddressSource" rw="0" type="s" dev_func="dev_LAN_Hosts_Host_AddressSource">
+							</param>
+							<param name="LeaseTimeRemaining" rw="0" type="i" dev_func="dev_LAN_Hosts_Host_LeaseTimeRemaining">
+							</param>
+							<param name="MACAddress" rw="0" type="s" dev_func="dev_LAN_Hosts_Host_MACAddress">
+							</param>
+							<param name="HostName" rw="0" type="s" dev_func="dev_LAN_Hosts_Host_HostName">
+							</param>
+							<param name="InterfaceType" rw="0" type="s" dev_func="dev_LAN_Hosts_Host_InterfaceType">
+							</param>
+							<param name="Active" rw="0" type="b" dev_func="dev_LAN_Hosts_Host_Active">
+							</param>
+						</obj>
+					</obj>
+				</obj>
+			</obj>
+		</obj>
+		<obj name="WANDevice" rw="0">
+			<obj name="1" rw="0">
+				<param name="WANConnectionNumberOfEntries" rw="0" type="u" dev_func="dev_WAN_WANnum">
+				</param>
+				<obj name="WANCommonInterfaceConfig" rw="0">
+					<param name="EnabledForInternet" rw="2" type="b" dev_func="dev_WANCommon_If_EnabledForInternet">
+					</param>
+					<param name="WANAccessType" rw="0" type="s" dev_func="dev_WANCommon_If_WANAccessType">
+					</param>
+					<param name="Layer1UpstreamMaxBitRate" rw="0" type="u" dev_func="dev_WANCommon_If_Layer1UpstreamMaxBitRate">
+					</param>
+					<param name="Layer1DownstreamMaxBitRate" rw="0" type="u" dev_func="dev_WANCommon_If_Layer1DownstreamMaxBitRate">
+					</param>
+					<param name="PhysicalLinkStatus" rw="0" type="s" dev_func="dev_WANCommon_If_PhysicalLinkStatus">
+					</param>
+					<param name="TotalBytesSent" rw="0" type="u" dev_func="dev_WANCommon_If_TotalBytesSent">
+					</param>
+					<param name="TotalBytesReceived" rw="0" type="u" dev_func="dev_WANCommon_If_TotalBytesReceived">
+					</param>
+					<param name="TotalPacketsSent" rw="0" type="u" dev_func="dev_WANCommon_If_TotalPacketsSent">
+					</param>
+					<param name="TotalPacketsReceived" rw="0" type="u" dev_func="dev_WANCommon_If_TotalPacketsReceived">
+					</param>
+				</obj>
+				<obj name="WANConnectionDevice" rw="2" max="9" obj_dev_func="dev_obj_wanconndev" obj_instance_func="get_wanconndev_instance">
+					<obj name="0" rw="2">
+						<obj name="WANIPConnection" rw="2" max="9" obj_dev_func="dev_obj_wanipconn" obj_instance_func="get_wanipconn_instance">
+							<obj name="0" rw="2">
+								<param name="Enable" rw="2" type="b" dev_func="dev_WANIPConnection_Enable">
+								</param>
+								<param name="ConnectionStatus" rw="0" type="s" dev_func="dev_WANIPConnection_ConnectionStatus">
+								</param>
+								<param name="PossibleConnectionTypes" rw="0" type="s" dev_func="dev_WANIPConnection_PossibleConnectionTypes">
+								</param>
+								<param name="ConnectionType" rw="2" type="s" dev_func="dev_WANIPConnection_ConnectionType">
+								</param>
+								<param name="Name" rw="2" type="s" dev_func="dev_WANIPConnection_Name">
+								</param>
+								<param name="Uptime" rw="0" type="u" dev_func="dev_WANIPConnection_Uptime">
+								</param>
+								<param name="LastConnectionError" rw="0" type="s" dev_func="dev_WANIPConnection_LastConnectionError">
+								</param>
+								<param name="RSIPAvailable" rw="0" type="b" dev_func="dev_WANIPConnection_RSIPAvailable">
+								</param>
+								<param name="NATEnabled" rw="2" type="b" dev_func="dev_WANIPConnection_NATEnabled">
+								</param>
+								<param name="AddressingType" rw="2" type="s" dev_func="dev_WANIPConnection_AddressingType">
+								</param>
+								<param name="ExternalIPAddress" rw="2" type="s" noti="2" noti_rw="0" dev_func="dev_WANIPConnection_ExternalIPAddress">
+								</param>
+								<param name="SubnetMask" rw="2" type="s" dev_func="dev_WANIPConnection_SubnetMask">
+								</param>
+								<param name="DefaultGateway" rw="2" type="s" dev_func="dev_WANIPConnection_DefaultGateway">
+								</param>
+								<param name="DNSEnabled" rw="2" type="b" dev_func="dev_WANIPConnection_DNSEnabled">
+								</param>
+								<param name="DNSOverrideAllowed" rw="2" type="b" dev_func="dev_WANIPConnection_DNSOverrideAllowed">
+								</param>
+								<param name="DNSServers" rw="2" type="s" dev_func="dev_WANIPConnection_DNSServers">
+								</param>
+								<param name="MACAddress" rw="2" type="s" dev_func="dev_WANIPConnection_MACAddress">
+								</param>
+								<param name="ConnectionTrigger" rw="2" type="s" dev_func="dev_WANIPConnection_ConnectionTrigger">
+								</param>
+								<param name="RouteProtocolRx" rw="2" type="s" dev_func="dev_WANIPConnection_RouteProtocolRx">
+								</param>
+								<param name="PortMappingNumberOfEntries" rw="0" type="u" dev_func="dev_WANIPConnection_PortMappingNumberOfEntries">
+								</param>
+							    <obj name="PortMapping" rw="2" max="9" obj_dev_func="dev_obj_ipportmap" obj_instance_func="get_ipportmap_instance">	
+									<obj name="0" rw="2">
+										<param name="PortMappingEnabled" rw="2" type="b" dev_func="dev_WANIP_PortMap_PortMappingEnabled">
+										</param>
+										<param name="PortMappingLeaseDuration" rw="2" type="u" dev_func="dev_WANIP_PortMap_PortMappingLeaseDuration">
+										</param>
+										<param name="RemoteHost" rw="2" type="s" dev_func="dev_WANIP_PortMap_RemoteHost">
+										</param>
+										<param name="ExternalPort" rw="2" type="u" dev_func="dev_WANIP_PortMap_ExternalPort">
+										</param>
+										<param name="InternalPort" rw="2" type="u" dev_func="dev_WANIP_PortMap_InternalPort">
+										</param>
+										<param name="PortMappingProtocol" rw="2" type="s" dev_func="dev_WANIP_PortMap_PortMappingProtocol">
+										</param>
+										<param name="InternalClient" rw="2" type="s" dev_func="dev_WANIP_PortMap_InternalClient">
+										</param>
+										<param name="PortMappingDescription" rw="2" type="s" dev_func="dev_WANIP_PortMap_PortMappingDescription">
+										</param>
+									</obj>
+								</obj>
+							</obj>
+						</obj>
+					    <obj name="WANPPPConnection" rw="2" max="9" obj_dev_func="dev_obj_wanpppconn" obj_instance_func="get_wanpppconn_instance">
+							<obj name="0" rw="2">
+								<param name="Enable" rw="2" type="b" dev_func="dev_WANPPP_Enable">
+								</param>
+								<param name="ConnectionStatus" rw="0" type="s" dev_func="dev_WANPPP_ConnectionStatus">
+								</param>
+								<param name="PossibleConnectionTypes" rw="0" type="s" dev_func="dev_WANPPP_PossibleConnectionTypes">
+								</param>
+								<param name="ConnectionType" rw="2" type="s" dev_func="dev_WANPPP_ConnectionType">
+								</param>
+								<param name="Name" rw="2" type="s" dev_func="dev_WANPPP_Name">
+								</param>
+								<param name="Uptime" rw="0" type="u" dev_func="dev_WANPPP_Uptime">
+								</param>
+								<param name="LastConnectionError" rw="0" type="s" dev_func="dev_WANPPP_LastConnectionError">
+								</param>
+								<param name="RSIPAvailable" rw="0" type="b" dev_func="dev_WANPPP_RSIPAvailable">
+								</param>
+								<param name="NATEnabled" rw="2" type="b" dev_func="dev_WANPPP_NATEnabled">
+								</param>
+								<param name="Username" rw="2" type="s" dev_func="dev_WANPPP_Username">
+								</param>
+								<param name="Password" rw="1" type="s" dev_func="dev_WANPPP_Password">
+								</param>
+								<param name="ExternalIPAddress" rw="0" type="s" noti="2" noti_rw="0" dev_func="dev_WANPPP_ExternalIPAddress">
+								</param>
+								<param name="DNSEnabled" rw="2" type="b" dev_func="dev_WANPPP_DNSEnabled">
+								</param>
+								<param name="DNSOverrideAllowed" rw="2" type="b" dev_func="dev_WANPPP_DNSOverrideAllowed">
+								</param>
+								<param name="DNSServers" rw="2" type="s" dev_func="dev_WANPPP_DNSServers">
+								</param>
+								<param name="MACAddress" rw="2" type="s" dev_func="dev_WANPPP_MACAddress">
+								</param>
+								<param name="TransportType" rw="0" type="s" dev_func="dev_WANPPP_TransportType">
+								</param>
+								<param name="PPPoEACName" rw="2" type="s" dev_func="dev_WANPPP_PPPoEACName">
+								</param>
+								<param name="PPPoEServiceName" rw="2" type="s" dev_func="dev_WANPPP_PPPoEServiceName">
+								</param>
+								<param name="ConnectionTrigger" rw="2" type="s" dev_func="dev_WANPPP_ConnectionTrigger">
+								</param>
+								<param name="RouteProtocolRx" rw="2" type="s" dev_func="dev_WANPPP_RouteProtocolRx">
+								</param>
+								<param name="PortMappingNumberOfEntries" rw="0" type="u" dev_func="dev_WANPPP_PortMappingNumberOfEntries">
+								</param>
+								<obj name="PortMapping" rw="2" max="9" obj_dev_func="dev_obj_pppportmap" obj_instance_func="get_pppportmap_instance">
+									<obj name="0" rw="2">
+										<param name="PortMappingEnabled" rw="2" type="b" dev_func="dev_WANPPP_PortMap_PortMappingEnabled">
+										</param>
+										<param name="PortMappingLeaseDuration" rw="2" type="u" dev_func="dev_WANPPP_PortMap_PortMappingLeaseDuration">
+										</param>
+										<param name="RemoteHost" rw="2" type="s" dev_func="dev_WANPPP_PortMap_RemoteHost">
+										</param>
+										<param name="ExternalPort" rw="2" type="u" dev_func="dev_WANPPP_PortMap_ExternalPort">
+										</param>
+										<param name="InternalPort" rw="2" type="u" dev_func="dev_WANPPP_PortMap_InternalPort">
+										</param>
+										<param name="PortMappingProtocol" rw="2" type="s" dev_func="dev_WANPPP_PortMap_PortMappingProtocol">
+										</param>
+										<param name="InternalClient" rw="2" type="s" dev_func="dev_WANPPP_PortMap_InternalClient">
+										</param>
+										<param name="PortMappingDescription" rw="2" type="s" dev_func="dev_WANPPP_PortMap_PortMappingDescription">
+										</param>
+									</obj>
+								</obj>			
+							</obj>
+						</obj>
+					</obj>
+				</obj>
+			</obj>
+		</obj>
+	</obj>
+</trf>
+<lib name="/lib/libdev.so">
+</lib>
+<wandev name="dev_get_wan_para">
+</wandev>
+<install name="dev_first_install">
+</install>
+<manu name="dev_Manufacturer">
+</manu>
+<oui name="dev_ManufacturerOUI">
+</oui>
+<class name="dev_ProductClass">
+</class>
+<serial name="dev_SerialNumber">
+</serial>
+<paramkey name="dev_ManageServer_ParameterKey">
+</paramkey>
+<upfig name="dev_getconfigfile">
+</upfig>
+<uplog name="dev_getsyslog">
+</uplog>
+<downsys name="get_flash_free_size">
+</downsys>
+<downkil name="kill_all_apps">
+</downkil>
+<downpar name="parse_data">
+</downpar>
+<taskwst name="write_config_file">
+</taskwst>
+<taskweb name="write_web">
+</taskweb>
+<taskfla name="flash_image">
+</taskfla>
+<taskreb name="reboot_dev">
+</taskreb>
+<trcmd name="TR_sys_cmd">
+</trcmd>
+<ca_cert name="/var/etc/openagent_ca.pem">
+</ca_cert>
+<cl_cert name="">
+</cl_cert>
+<cl_key name="">
+</cl_key>
+</TR069>

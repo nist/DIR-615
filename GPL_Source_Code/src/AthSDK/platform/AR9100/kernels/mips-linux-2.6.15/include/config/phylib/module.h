@@ -1,0 +1,1 @@
+#define CONFIG_PHYLIB_MODULE 1
